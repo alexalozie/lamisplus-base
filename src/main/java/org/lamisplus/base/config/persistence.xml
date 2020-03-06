@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:postgresql://localhost:5432/lamisplus</property>
+    <property name="connection.driver_class">org.postgresql.Driver</property>
+      <mapping class="org.lamisplus.base.domain.entities.Patient"/>
+      <mapping class="org.lamisplus.base.domain.entities.Person"/>
+      <mapping class="org.lamisplus.base.domain.entities.PersonContact"/>
+      <mapping class="org.lamisplus.base.domain.entities.PersonRelative"/>
+      <mapping class="org.lamisplus.base.domain.entities.Visit"/>
+    <mapping class="org.lamisplus.base.domain.entities.ApplicationCodeset"/>
+    <mapping class="org.lamisplus.base.domain.entities.ApplicationCodesetHasStandardCodeset"/>
+    <mapping class="org.lamisplus.base.domain.entities.Country"/>
+    <mapping class="org.lamisplus.base.domain.entities.Facility"/>
+    <mapping class="org.lamisplus.base.domain.entities.FacilityService"/>
+    <mapping class="org.lamisplus.base.domain.entities.IdentifierType"/>
+    <mapping class="org.lamisplus.base.domain.entities.Menu"/>
+    <mapping class="org.lamisplus.base.domain.entities.Module"/>
+    <mapping class="org.lamisplus.base.domain.entities.ModuleDependencies"/>
+    <mapping class="org.lamisplus.base.domain.entities.Priviledge"/>
+    <mapping class="org.lamisplus.base.domain.entities.Province"/>
+    <mapping class="org.lamisplus.base.domain.entities.Role"/>
+    <mapping class="org.lamisplus.base.domain.entities.RoleHasPriviledge"/>
+    <mapping class="org.lamisplus.base.domain.entities.Service"/>
+    <mapping class="org.lamisplus.base.domain.entities.ServiceEnrollment"/>
+    <mapping class="org.lamisplus.base.domain.entities.Standard"/>
+    <mapping class="org.lamisplus.base.domain.entities.StandardCodeset"/>
+    <mapping class="org.lamisplus.base.domain.entities.State"/>
+    <mapping class="org.lamisplus.base.domain.entities.User"/>
+    <mapping class="org.lamisplus.base.domain.entities.UserHasPriviledge"/>
+      <mapping class="org.lamisplus.base.domain.entities.Encounter"/>
+      <mapping class="org.lamisplus.base.domain.entities.Form"/>
+      <!-- <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>
