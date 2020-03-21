@@ -27,19 +27,35 @@ class ApiError {
     private String message;
     private String debugMessage;
     private List<ApiSubError> subErrors;
+    private int statusCode;
+/*
+    private String ObjectName;
+    private String Field;
+    private Object RejectedValue;
+    private String DefaultMessage;
+*/
 
     private ApiError() {
         timestamp = LocalDateTime.now();
     }
 
+
     public ApiError(HttpStatus status) {
         this();
         this.status = status;
+        this.statusCode = this.status.value();
+    }
+
+    public ApiError(HttpStatus status, Set<ConstraintViolation<?>> constraintViolations) {
+        this();
+        this.status = status;
+        this.statusCode = this.status.value();
     }
 
     public ApiError(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
+        this.statusCode = this.status.value();
         this.message = "Unexpected error";
         this.debugMessage = ex.getLocalizedMessage();
     }
@@ -47,6 +63,7 @@ class ApiError {
     public ApiError(HttpStatus status, String message, Throwable ex) {
         this();
         this.status = status;
+        this.statusCode = this.status.value();
         this.message = message;
         this.debugMessage = ex.getLocalizedMessage();
     }
@@ -59,10 +76,12 @@ class ApiError {
     }
 
     private void addValidationError(String object, String field, Object rejectedValue, String message) {
+        //this.setObjectName(object);this.setField(field);this.setRejectedValue(rejectedValue);this.setDefaultMessage(message);
         addSubError(new ApiValidationError(object, field, rejectedValue, message));
     }
 
     private void addValidationError(String object, String message) {
+        //this.setObjectName(object);this.setDefaultMessage(message);
         addSubError(new ApiValidationError(object, message));
     }
 

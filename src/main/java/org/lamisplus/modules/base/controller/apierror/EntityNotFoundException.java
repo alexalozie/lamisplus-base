@@ -18,7 +18,7 @@ public class EntityNotFoundException extends RuntimeException {
                 searchParams;
     }
 
-    private static <K, V> Map<K, V> toMap(
+    protected static <K, V> Map<K, V> toMap(
             Class<K> keyType, Class<V> valueType, Object... entries) {
         if (entries.length % 2 == 1)
             throw new IllegalArgumentException("Invalid entries");
