@@ -11,5 +11,8 @@ import java.util.Optional;
 public interface FormRepository extends JpaRepository<Form, Long> {
     Optional<Form> findByName(String name);
     List<Form> findAll();
+
+    List<Form> findByServiceName(String service);
+    Optional<Form> findByIdAndServiceName(Long Formid, String serviceCode);
 }
 

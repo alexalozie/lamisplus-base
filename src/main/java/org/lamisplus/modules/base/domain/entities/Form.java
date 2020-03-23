@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,8 +13,8 @@ import java.io.Serializable;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "form", schema = "public", catalog = "lamisplus")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @EqualsAndHashCode
 public class Form extends JsonBEntity implements Serializable {
 
@@ -27,9 +28,9 @@ public class Form extends JsonBEntity implements Serializable {
     @NotNull
     private String name;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "resource_object")
+    @Column(name = "resource_object", nullable = false, columnDefinition = "jsonb")
     private Object resourceObject;
 
     @Basic

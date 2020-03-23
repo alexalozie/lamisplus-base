@@ -17,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/api/assignPatient")
+@RequestMapping("/api/assignPatients")
 @Slf4j
 @RequiredArgsConstructor
 public class ClinicianPatientController {

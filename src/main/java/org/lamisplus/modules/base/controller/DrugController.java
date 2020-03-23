@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/pharmacy")
+@RequestMapping("/api/drugs")
 @Slf4j
 @RequiredArgsConstructor
 public class DrugController {
@@ -21,7 +21,7 @@ public class DrugController {
     private final DrugService drugService;
 
     //DRUG GROUP.........
-    @GetMapping("/drugs")
+    @GetMapping
     public ResponseEntity<List<Drug>> getAllDrugs() {
         return ResponseEntity.ok(this.drugService.getAllDrug());
     }

@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.entities.Patient;
-import org.lamisplus.modules.base.domain.entities.Person;
-import org.lamisplus.modules.base.domain.entities.PersonContact;
-import org.lamisplus.modules.base.domain.entities.PersonRelative;
+import org.lamisplus.modules.base.domain.entities.*;
 import org.lamisplus.modules.base.domain.mapper.PatientMapper;
 import org.lamisplus.modules.base.domain.mapper.PersonRelativeMapper;
 import org.lamisplus.modules.base.repository.*;
@@ -36,6 +33,7 @@ public class PatientService {
     private final PersonRepository personRepository;
     private final PersonContactRepository personContactRepository;
     private final PersonRelativeRepository personRelativeRepository;
+    private final VisitRepository visitRepository;
     private final PatientMapper patientMapper;
     private final PersonRelativeMapper personRelativeMapper;
 
@@ -96,7 +94,13 @@ public class PatientService {
             Person person = personRepository.getOne(patient.getPersonId());
             log.info("PERSON  IS ..." + person);
             PersonContact personContact = personContactRepository.findByPersonId(person.getId()).get();
-            PatientDTO patientDTO = patientMapper.toPatientDTO(person, personContact, patient);
+            Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
+            PatientDTO patientDTO = null;
+            if(visitOptional.isPresent()) {
+                patientDTO = patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient);
+            } else {
+                patientDTO = patientMapper.toPatientDTO(person, personContact, patient);
+            }
 
             List<PersonRelative> personRelatives = personRelativeRepository.findByPersonId(person.getId());
             if (personRelatives.size() > 0) {
@@ -118,8 +122,13 @@ public class PatientService {
 
         Person person = personRepository.getOne(patient.get().getPersonId());
         PersonContact personContact = personContactRepository.findByPersonId(person.getId()).get();
-        PatientDTO patientDTO = patientMapper.toPatientDTO(person, personContact, patient.get());
-
+        Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.get().getId());
+        PatientDTO patientDTO = null;
+        if(visitOptional.isPresent()) {
+            patientDTO = patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient.get());
+        } else {
+            patientDTO = patientMapper.toPatientDTO(person, personContact, patient.get());
+        }
         List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
         List<PersonRelative> personRelatives = personRelativeRepository.findByPersonId(person.getId());
         if (personRelatives != null || personRelatives.size() > 0) {
@@ -157,7 +166,7 @@ public class PatientService {
 
     }*/
 
-    public Person updatePatient(PatientDTO patientDTO) {
+    public Person update(PatientDTO patientDTO) {
         //Creating a patient object
         Optional<Patient> patient1 = this.patientRepository.findByHospitalNumber(patientDTO.getHospitalNumber());
         if (!patient1.isPresent()) notExit(Patient.class, "Hospital Number", patientDTO.getHospitalNumber());

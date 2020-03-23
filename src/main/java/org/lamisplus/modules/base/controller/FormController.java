@@ -3,11 +3,16 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
+import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entities.Form;
 import org.lamisplus.modules.base.service.FormService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 
@@ -18,10 +23,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FormController {
     private final FormService formService;
+    private final String ENTITY_NAME = "Form";
 
-    @GetMapping("/all")
-    public List<FormDTO> getAllForms() {
-        return this.formService.getAllForm();
+    @GetMapping
+    public ResponseEntity<List<FormDTO>> getForms(@RequestParam(required = false) String serviceCode) {
+        if(serviceCode == null || serviceCode.equals("")){
+            return ResponseEntity.ok(this.formService.getAllForm());
+        } else {
+            return ResponseEntity.ok(this.formService.getFormByServiceCode(serviceCode));
+        }
+    }
+    @GetMapping ("/{formId}/{serviceName}")
+    public ResponseEntity<FormDTO> getFormByIdAndServiceName(@PathVariable Long formId, @PathVariable String serviceName) {
+            return ResponseEntity.ok(this.formService.getFormByFormIdAndServiceCode(formId, serviceName));
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Form> save(@RequestBody FormDTO formDTO) throws URISyntaxException {
+        Form form = this.formService.save(formDTO);
+        return ResponseEntity.created(new URI("/api/forms/" + form.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(form.getId()))).body(form);
     }
 
 

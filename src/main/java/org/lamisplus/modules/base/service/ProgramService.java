@@ -40,12 +40,17 @@ public class ProgramService {
         return this.servicesRepository.save(service);
     }
 
-    public List<Service> allServiceByModuleId(Long moduleId){
+    public List<Service> getServiceByModuleId(Long moduleId){
         List<Service> serviceList = this.servicesRepository.findByModuleId(moduleId);
         if(serviceList.size() > 0 || serviceList == null) throw new EntityNotFoundException(Module.class, "Module Id", moduleId + "");
 
         return serviceList;
 
+    }
+
+    public List<Service> getAllService(){
+        List<Service> serviceList = this.servicesRepository.findAll();
+        return serviceList;
     }
 
 

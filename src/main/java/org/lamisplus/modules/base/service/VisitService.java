@@ -15,10 +15,15 @@ import org.lamisplus.modules.base.domain.mapper.PatientMapper;
 import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.controller.RecordNotFoundException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -56,22 +61,33 @@ public class VisitService {
         return visit;
     }
 
+    public List<VisitDTO> getSortedVisit(Optional <Long> patientId, Optional<String> dateStart, Optional<String> dateEnd) {
 
-    public List<VisitDTO> getVisitByDateStart(LocalDate DateVisitStart) {
-        // Converting 'dd-MM-yyyy' String format to LocalDate
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        List<Visit> visits = visitRepository.findAll(new Specification<Visit>() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (patientId.isPresent()) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId").as(Long.class), patientId.get())));
+                }
+                if (dateStart.isPresent()) {
+                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateVisitStart").as(LocalDate.class), localDate)));
+                }
+                if (dateEnd.isPresent()) {
+                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitStart").as(LocalDate.class), localDate)));
+                }
+                    /*String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("dateVisitStart").as(LocalDate.class), localDate)));*/
 
-        List<Visit> visits = this.visitRepository.findByDateVisitStart(LocalDate.parse(formatter.format(LocalDate.now()), formatter));
-        log.info("Just Checking in a patient(VisitService)...");
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateVisitStart")));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        });
 
-        if(visits.size() < 1){
-            throw new EntityNotFoundException(Visit.class,"Date", LocalDate.parse(formatter.format(LocalDate.now()), formatter).toString());
-        }
-        System.out.println("We got here....");
-
-        //List<PatientDTO> patientDTOs = new ArrayList<>();
         List<VisitDTO> visitDTOs = new ArrayList<>();
-
         visits.forEach(visit -> {
             Patient patient = patientRepository.getOne(visit.getPatient().getId());
             Person person = personRepository.getOne(patient.getPersonId());
@@ -81,25 +97,5 @@ public class VisitService {
             visitDTOs.add(visitDTO);
         });
         return visitDTOs;
-
     }
-
-    /*public VisitDTO getSingleVisit(Long id){
-
-        Optional<Visit> visit = visitRepository.findById(id);
-
-        if (!visit.isPresent())
-            throw new RecordNotFoundException();
-
-        Visit visit1 = visit.get();
-
-        VisitDTO visitDTO = new VisitDTO();
-
-        visitDTO.setPatientId(visit1.getPatientId());
-        visitDTO.setDateVisitStart(visit1.getDateVisitStart());
-        visitDTO
-
-
-
-    }*/
-}
+    }

@@ -199,6 +199,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Handle java.lang.IllegalArgumentException
+     */
+    @ExceptionHandler(java.lang.IllegalArgumentException.class)
+    protected ResponseEntity<Object> IllegalArgumentException(java.lang.IllegalArgumentException ex) {
+        ApiError apiError = new ApiError(FORBIDDEN);
+        apiError.setStatusCode(FORBIDDEN.value());
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    /**
      * Handle DataIntegrityViolationException, inspects the cause for different DB causes.
      *
      * @param ex the DataIntegrityViolationException

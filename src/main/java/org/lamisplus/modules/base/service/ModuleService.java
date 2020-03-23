@@ -32,7 +32,7 @@ public class ModuleService {
         return this.moduleRepository.save(module);
     }
 
-    public List<Module> allModule(){
+    public List<Module> getAllModules(){
         List<Module> moduleList = this.moduleRepository.findAll();
         //if(moduleList.size() > 0 || moduleList == null) throw new EntityNotFoundException(Module.class, "Module", moduleId + "");
         return moduleList;

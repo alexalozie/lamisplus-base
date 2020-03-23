@@ -1,8 +1,11 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
+import org.lamisplus.modules.base.domain.dto.EncounterDTO;
 import org.lamisplus.modules.base.domain.entities.Person;
 import org.lamisplus.modules.base.repository.*;
+import org.lamisplus.modules.base.service.EncounterService;
 import org.lamisplus.modules.base.service.PatientService;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +27,7 @@ public class PatientController {
     private final String ENTITY_NAME = "Patient";
     private final PatientRepository patientRepository;
     private final PatientService patientService;
+    private final EncounterService encounterService;
 
     @GetMapping
     public Iterable findAll() {
@@ -47,10 +54,24 @@ public class PatientController {
     }
     */
     @PutMapping
-    public Person updatePatient(@RequestBody PatientDTO patientDTO) throws RecordNotFoundException {
-        return this.patientService.updatePatient(patientDTO);
+    public Person update(@RequestBody PatientDTO patientDTO) throws RecordNotFoundException {
+        return this.patientService.update(patientDTO);
     }
 
+    //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION for a particular patient
+    @GetMapping("/{patientId}/encounter/{serviceName}/{formName}/{visitId}")
+    public ResponseEntity<EncounterDTO> getEncounterByVisitId(@PathVariable Long patientId, @PathVariable String serviceName,
+                                                                 @PathVariable String formName, @PathVariable Long visitId) throws URISyntaxException {
+        return ResponseEntity.ok(this.encounterService.getEncounterByVisitId(patientId, serviceName, formName, visitId));
+    }
+
+    //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION for a particular patient
+    @GetMapping("/{patientId}/encounter/{serviceName}/{formName}")
+    public ResponseEntity<List<EncounterDTO>> getSortedEncounter(@PathVariable Long patientId, @PathVariable String serviceName,
+                                                                 @PathVariable String formName, @RequestParam(required = false) String sortOrder,
+                                                                 @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit) throws URISyntaxException {
+        return ResponseEntity.ok(this.encounterService.getSortedEncounter(patientId, serviceName, formName, sortField, sortOrder, limit));
+    }
    /* @DeleteMapping("/{HospitalNo}")
     public Boolean archivePatient(@PathVariable String hospitalNumber, @RequestParam Byte archive) throws RecordNotFoundException {
         return this.patientService.archivePatient(hospitalNumber, archive);

@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
@@ -22,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/visits")
@@ -31,24 +34,9 @@ public class VisitController {
     private final VisitRepository visitRepository;
     private final VisitService visitService;
 
-
-    private static Visit notExit() {
-        throw new RecordExistException(Visit.class, ENTITY_NAME, "id is null");
-    }
-
     @GetMapping
     public Iterable findAll() {
         return visitRepository.findAll();
-    }
-
-    @GetMapping("/today")
-    public Iterable getPatientByToday() {
-        DateTimeFormatter formatter = null;
-
-        // Converting 'dd-MM-yyyy' String format to LocalDate
-        formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        return this.visitService.getVisitByDateStart(LocalDate.parse(formatter.format(LocalDate.now()), formatter));
     }
 
     @GetMapping("/{id}")
@@ -57,15 +45,22 @@ public class VisitController {
                 .orElseThrow(RecordNotFoundException::new);
     }
 
+    @ApiOperation(value="getSortedVisit", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - /api/visits/patient/20/?dateStart=02-03-2020")
     @GetMapping("/patient/{patientId}")
-    public Iterable getSinglePatientById(@PathVariable Long patientId) {
-        // WORK ON IT
+    public ResponseEntity<List<VisitDTO>> getSortedVisit(@PathVariable Optional<Long> patientId, @RequestParam(required = false) Optional<String> dateStart,
+                                                         @RequestParam(required = false) Optional <String> dateEnd) {
+       /* // WORK ON IT
         if (visitRepository.findByPatientId(patientId).size() < 1)
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Patients Not Found", new RecordNotFoundException(patientId.toString()));
         else
             return visitRepository.findByPatientId(patientId);
+*/
+        return ResponseEntity.ok(visitService.getSortedVisit(patientId,dateStart,dateEnd));
     }
+
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

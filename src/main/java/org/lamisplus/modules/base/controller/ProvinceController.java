@@ -28,12 +28,8 @@ public class ProvinceController {
     private static final String ENTITY_NAME = "province";
     private final ProvinceService provinceService;
 
-    private static Province notExit() {
-        throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id is null");
-    }
-
     @PostMapping
-    public ResponseEntity<Province> saveProvince(@RequestBody ProvinceDTO provinceDTO) throws URISyntaxException {
+    public ResponseEntity<Province> save(@RequestBody ProvinceDTO provinceDTO) throws URISyntaxException {
         Province province = provinceService.save(provinceDTO);
             return ResponseEntity.created(new URI("/api/province/" + province.getId()))
                     .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(province.getId()))).body(province);

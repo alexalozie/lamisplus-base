@@ -45,7 +45,7 @@ public class ProvinceService {
         Optional<Province> provinceOptional = provinceRepository.findByName(provinceDTO.getName());
         if (provinceOptional.isPresent()) exist(Province.class, "State Id", provinceDTO.getStateId() + "");
 
-        Province province = provinceMapper.toFormDTO(provinceDTO);
+        Province province = provinceMapper.toProvinceDTO(provinceDTO);
 
         return provinceRepository.save(province);
     }
@@ -69,7 +69,7 @@ public class ProvinceService {
         Optional<Province> provinceOptional = provinceRepository.findByName(provinceDTO.getName());
         if (!provinceOptional.isPresent()) notExit(Province.class, "State Id", provinceDTO.getStateId() + "");
 
-        Province province = provinceMapper.toFormDTO(provinceDTO);
+        Province province = provinceMapper.toProvinceDTO(provinceDTO);
 
         return provinceRepository.save(province);
     }

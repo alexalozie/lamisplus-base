@@ -32,7 +32,11 @@ public class ProgramController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Service>> getServiceByModuleId(@RequestParam Long moduleId) {
-        return ResponseEntity.ok(this.programService.allServiceByModuleId(moduleId));
+    public ResponseEntity<List<Service>> getServices(@RequestParam(required = false) Long moduleId) {
+        if(moduleId == null || moduleId == 0) {
+            return ResponseEntity.ok(this.programService.getServiceByModuleId(moduleId));
+        }else {
+            return ResponseEntity.ok(this.programService.getAllService());
+        }
     }
 }

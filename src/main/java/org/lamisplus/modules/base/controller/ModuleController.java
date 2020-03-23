@@ -30,7 +30,7 @@ public class ModuleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Module>> getAllModule(@RequestParam Long moduleId) {
-        return ResponseEntity.ok(this.moduleService.allModule());
+    public ResponseEntity<List<Module>> getAllModule() {
+        return ResponseEntity.ok(this.moduleService.getAllModules());
     }
 }

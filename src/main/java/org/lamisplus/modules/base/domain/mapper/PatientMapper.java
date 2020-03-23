@@ -4,6 +4,7 @@ import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.entities.Patient;
 import org.lamisplus.modules.base.domain.entities.Person;
 import org.lamisplus.modules.base.domain.entities.PersonContact;
+import org.lamisplus.modules.base.domain.entities.Visit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -19,8 +20,14 @@ public interface PatientMapper {
 
     @Mappings({
             @Mapping(source="person.id", target="personId"),
-            //@Mapping(source="personContact.id", target="personContactId")
+            @Mapping(source="visit.id", target="visitId"),
             @Mapping(source="patient.id", target="patientId")
     })
-    PatientDTO toPatientDTO(Person person, PersonContact personContact, Patient patient);
+    PatientDTO toPatientDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
+    @Mappings({
+            @Mapping(source="person.id", target="personId"),
+            @Mapping(source="patient.id", target="patientId")
+    })
+    PatientDTO toPatientDTO(Person person,PersonContact personContact, Patient patient);
+
 }

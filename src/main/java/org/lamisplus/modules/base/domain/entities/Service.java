@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.lamisplus.modules.base.domain.entities.ServiceEnrollment;
@@ -26,8 +27,5 @@ public class Service {
     @Basic
     @Column(name = "module_id")
     private Long moduleId;
-
-    @OneToMany(mappedBy = "serviceByServicesId")
-    public Collection<ServiceEnrollment> ServiceEnrollmentsById;
 
 }

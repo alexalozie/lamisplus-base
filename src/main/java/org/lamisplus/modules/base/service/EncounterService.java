@@ -14,8 +14,17 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.controller.RecordNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -279,18 +288,13 @@ public class EncounterService {
 
         }
 
-    //Get first Encounter
-    public List<EncounterDTO> getDateByRange(Long patientId, String serviceName, String formName, String firstDate, String lastDate) {
+
+    public List<EncounterDTO> getEncounterByDate(String serviceName, String formName, LocalDate dateStart, LocalDate dateEnd) {
         List<EncounterDTO> encounterDTOS = new ArrayList();
-        LocalDate localDate = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        //log.info("All Encounter " + serviceName + " and " + formName + " Today is " + localDate);
+        List <Encounter> encounterList = encounterRepository.findAllByServiceNameAndFormNameAndDateEncounterIsBetweenQuery(serviceName, formName, dateStart, dateEnd);
 
-        List <Encounter> encounter = encounterRepository.findAllByPatientIdAndServiceNameAndFormNameAndDateEncounterBetween(patientId, serviceName, formName, LocalDate.parse(firstDate, formatter), LocalDate.parse(lastDate, formatter));
-
-        encounter.forEach(singleEncounter -> {
-
+        encounterList.forEach(singleEncounter -> {
             Patient patient = this.patientRepository.findById(singleEncounter.getPatientId()).get();
             Person person = this.personRepository.findById(patient.getPersonId()).get();
 
@@ -317,6 +321,93 @@ public class EncounterService {
         final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounter.get());
 
         return encounterDTO;
+
+    }
+
+    public List<EncounterDTO> getSortedEncounter(Long pid, String serviceName, String formName, String sortField, String sortOrder, Integer limit) {
+        Pageable pageableSorter = PageRequest.of(0, 4, Sort.by("dateEncounter").descending());
+
+        if(sortField == null || sortOrder == null || sortOrder == null || limit == null) {
+            pageableSorter = PageRequest.of(0, 4, Sort.by("dateEncounter").descending());
+        } else if(sortOrder != null || !sortOrder.equals("") || sortOrder.equalsIgnoreCase("Asc")) {
+            pageableSorter = PageRequest.of(0, limit, Sort.by(sortField).ascending());
+        } else if(!sortOrder.equals("") || !sortOrder.equals("") || sortOrder != null || sortOrder.equalsIgnoreCase("Desc")) {
+            pageableSorter = PageRequest.of(0, limit, Sort.by(sortField).descending());
+        }
+        List<Encounter> encountersList = encounterRepository.findAllByPatientIdAndServiceNameAndFormName(pid,serviceName, formName,pageableSorter);
+
+        List<EncounterDTO> encounterDTOS = new ArrayList();
+        encountersList.forEach(OneEncounter -> {
+            Patient patient = this.patientRepository.findById(OneEncounter.getPatientId()).get();
+            Person person = this.personRepository.findById(patient.getPersonId()).get();
+
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, OneEncounter);
+            log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
+
+            encounterDTOS.add(encounterDTO);
+
+        });
+
+        return encounterDTOS;
+    }
+
+    public EncounterDTO getEncounterByVisitId(Long PatientId, String ServiceName, String FormName, Long VisitId) {
+        Optional<Visit> visit = this.visitRepository.findById(VisitId);
+        if(!visit.isPresent()) throw new EntityNotFoundException(Visit.class, "Visit Id", VisitId + "");
+
+        Optional<Encounter> encounterOptional = this.encounterRepository.findFirstByPatientIdAndServiceNameAndFormNameAndVisitIdOrderByDateEncounterDesc(PatientId, ServiceName, FormName, VisitId);
+
+        if (!encounterOptional.isPresent()) throw new EntityNotFoundException(Encounter.class, "Patient Id ",PatientId.toString()+", " +
+                "Service Name = "+ServiceName+", Form Name ="+FormName +", Visit Id ="+VisitId);
+
+        Encounter encounter = encounterOptional.get();
+        Patient patient = this.patientRepository.findById(encounter.getPatientId()).get();
+
+        //Creating a person object
+        Person person = this.personRepository.findById(patient.getPersonId()).get();
+
+        final EncounterDTO encounterDTO1 = encounterMapper.toEncounterDTO(person, patient, encounter);
+
+        log.info("GETTING encounter Latest 12... " + encounterDTO1);
+        //issues may come up with wrong form name
+        return encounterDTO1;
+    }
+
+    public List<EncounterDTO> getSortedEncounter(String serviceName, String formName, Optional<String> dateStart, Optional<String> dateEnd) {
+        List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if(dateStart.isPresent()){
+                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
+                }
+
+                if(dateEnd.isPresent()){
+                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
+                }
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("serviceName"), serviceName)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formName"), formName)));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateEncounter")));
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        });
+       // List <Encounter> encounterList = encounterRepository.findAllByServiceNameAndFormNameAndDateEncounterIsBetweenQuery(serviceName, formName, dateStart, dateEnd);
+        List<EncounterDTO> encounterDTOS = new ArrayList<>();
+        encounters.forEach(singleEncounter -> {
+            Patient patient = this.patientRepository.findById(singleEncounter.getPatientId()).get();
+            Person person = this.personRepository.findById(patient.getPersonId()).get();
+
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter);
+            log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
+
+            encounterDTOS.add(encounterDTO);
+
+        });
+
+        return encounterDTOS;
 
     }
 }

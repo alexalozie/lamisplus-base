@@ -26,25 +26,16 @@ public class LabService {
     private final LabTestGroupRepository labTestGroupRepository;
     private final LabTestMapper labTestMapper;
 
-    private static Object exist(Class o, String param1, String param2) {
-        throw new RecordExistException(o,param1, param2);
-    }
-
-    private static LabTest notExit(Class o, String param1, String param2) {
-        throw new EntityNotFoundException(o,param1, param2);
-    }
-
     public List<LabTestGroup> getAllLabTestGroup() {
         return this.labTestGroupRepository.findAll();
     }
 
     //List of Lab Test
-    public List<LabTestDTO> getAllLabTest(Long labTestCategoryId) {
+    public List<LabTestDTO> getAllLabTest(Long labTestGroupId) {
         List<LabTestDTO> labTestDTOS = new ArrayList();
-        List<LabTest> labTests = labTestRepository.findAllByLabTestCategoryId(labTestCategoryId);
+        List<LabTest> labTests = labTestRepository.findAllByLabTestCategoryId(labTestGroupId);
 
-        if(labTests.size() < 1 || labTests == null) notExit(LabTest.class, "Lab Test Category Id", labTestCategoryId + "");
-
+        if(labTests.size() < 1 || labTests == null) throw new EntityNotFoundException(LabTest.class, "Lab Test Category Id", labTestGroupId + "");
         labTests.forEach(singleTest -> {
             LabTestDTO labTestDTO = labTestMapper.toLabTest(singleTest);
 
