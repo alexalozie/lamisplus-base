@@ -1,1 +1,1 @@
-web: java -Dserver.port=${PORT:8081} -jar target/base-module.war
+web: java -Dserver.port=${PORT} -jar target/base-module.war
