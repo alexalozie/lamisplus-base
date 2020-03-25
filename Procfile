@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* BaseApplication
+web: java -Dserver.port=${PORT:8081} -jar target/base-module.war
