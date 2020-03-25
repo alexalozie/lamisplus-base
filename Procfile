@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* base-module
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* BaseApplication
