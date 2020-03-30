@@ -118,7 +118,7 @@ public class PatientService {
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patient = this.patientRepository.findByHospitalNumber(hospitalNumber);
         //Handle error
-        if (!patient.isPresent()) notExit(Patient.class, "Hospital Number", hospitalNumber + "");
+        //if (!patient.isPresent()) notExit(Patient.class, "Hospital Number", hospitalNumber + "");
 
         Person person = personRepository.getOne(patient.get().getPersonId());
         PersonContact personContact = personContactRepository.findByPersonId(person.getId()).get();

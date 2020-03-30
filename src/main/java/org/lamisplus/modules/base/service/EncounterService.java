@@ -46,10 +46,6 @@ public class EncounterService {
     private final FormRepository formRepository;
     private final EncounterMapper encounterMapper;
 
-    private static Object exist(Encounter o) {
-        throw new EntityNotFoundException(Encounter.class, "Id", "id Already Exist");
-    }
-
     private static Encounter notExit() {
         throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id is null");
     }
@@ -124,25 +120,9 @@ public class EncounterService {
 
     //EDITED - 19/03/2020
     public List<EncounterDTO> getAllByPatientId(Long patientId) {
-        List<EncounterDTO> encounterDTOS = new ArrayList();
-
         List<Encounter> tempEncounter = encounterRepository.findBypatientId(patientId);
 
-        if (tempEncounter.size() < 1)
-            throw new RecordNotFoundException();
-
-        tempEncounter.forEach(OnePatientEncounter -> {
-            Patient patient = this.patientRepository.findById(OnePatientEncounter.getPatientId()).get();
-
-            Person person = this.personRepository.findById(patient.getPersonId()).get();
-
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, OnePatientEncounter);
-            log.info("GETTING encounter in List by Pid 123456... " + encounterDTO);
-
-            encounterDTOS.add(encounterDTO);
-        });
-
-        return encounterDTOS;
+        return listEncounter(tempEncounter);
     }
 
     public EncounterDTO getByEncounterId(Long id) {
@@ -223,132 +203,12 @@ public class EncounterService {
 
     }
 
-    //Getting a single encounter for a patient
-    //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION)
-    public EncounterDTO getLatestEncounter(Long PatientId, String ServiceName, String FormName) {
-        Optional<Encounter> patientEncounter = this.encounterRepository.findFirstByPatientIdAndServiceNameAndFormNameOrderByDateEncounterDesc(PatientId, ServiceName, FormName);
-        //patientEncounter.map(EncounterService::exist);
-        if (!patientEncounter.isPresent())
-            throw new EntityNotFoundException(Encounter.class, "Patient Id ",PatientId.toString()+", Service Name = "+ServiceName+", Form Name ="+FormName);
-
-        Encounter encounter = patientEncounter.get();
-        Patient patient = this.patientRepository.findById(encounter.getPatientId()).get();
-
-        //Creating a person object
-        Person person = this.personRepository.findById(patient.getPersonId()).get();
-
-        final EncounterDTO encounterDTO1 = encounterMapper.toEncounterDTO(person, patient, encounter);
-
-        log.info("GETTING encounter Latest 12... " + encounterDTO1);
-        //issues may come up with wrong form name
-        return encounterDTO1;
-    }
-
-    //Get all latest encounter
-    public List<EncounterDTO> getAllLatestEncounter(LocalDate DateEncounter, String serviceName, String formName) {
-        List<EncounterDTO> encounterDTOS = new ArrayList();
-
-        List<Encounter> tempEncounter = encounterRepository.findAllByServiceNameAndFormNameAndDateEncounterOrderByDateEncounterDesc(serviceName, formName, DateEncounter);
-
-        //Handling errors
-        if (tempEncounter.size() < 1) {
-            throw new EntityNotFoundException(Encounter.class, "Date ", String.valueOf(DateEncounter));
-        }
-
-        tempEncounter.forEach(OnePatientEncounter -> {
-            Patient patient = this.patientRepository.findById(OnePatientEncounter.getPatientId()).get();
-/*
-            if (patient.getArchive() == 0)
-                return;
-*/
-            Person person = this.personRepository.findById(patient.getPersonId()).get();
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, OnePatientEncounter);
-
-            log.info("GETTING encounter in List by Pid 12... " + encounterDTO);
-
-            encounterDTOS.add(encounterDTO);
-        });
-
-        return encounterDTOS;
-    }
-
-    //Get Last Encounter
-    public EncounterDTO getLastEncounter(Long patientId, String serviceName, String formName) {
-        Optional <Encounter> encounter = encounterRepository.findTopByServiceNameAndFormNameAndPatientIdOrderByDateEncounterDesc(serviceName, formName, patientId);
-
-       return this.findEncounter(encounter, patientId, serviceName, formName);
-    }
-
-
-    //Get first Encounter
-    public EncounterDTO getFirstEncounter(Long patientId, String serviceName, String formName) {
-        Optional <Encounter> encounter = encounterRepository.findTopByServiceNameAndFormNameAndPatientIdOrderByDateEncounterAsc(serviceName, formName, patientId);
-
-        return this.findEncounter(encounter, patientId, serviceName, formName);
-
-        }
-
-
-    public List<EncounterDTO> getEncounterByDate(String serviceName, String formName, LocalDate dateStart, LocalDate dateEnd) {
-        List<EncounterDTO> encounterDTOS = new ArrayList();
-
-        List <Encounter> encounterList = encounterRepository.findAllByServiceNameAndFormNameAndDateEncounterIsBetweenQuery(serviceName, formName, dateStart, dateEnd);
-
-        encounterList.forEach(singleEncounter -> {
-            Patient patient = this.patientRepository.findById(singleEncounter.getPatientId()).get();
-            Person person = this.personRepository.findById(patient.getPersonId()).get();
-
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter);
-            log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
-
-            encounterDTOS.add(encounterDTO);
-
-        });
-
-        return encounterDTOS;
-
-    }
-
-        //Custom in built method(Helper method)
-    private EncounterDTO findEncounter(Optional <Encounter> encounter, Long patientId, String serviceName, String formName){
-
-        //Handle error
-        if (!encounter.isPresent())
-            throw new EntityNotFoundException(Encounter.class, "Patient Id ",patientId.toString()+", Service Name ="+serviceName+", Form Name ="+formName);
-        Patient patient = this.patientRepository.findById(patientId).get();
-        Person person = this.personRepository.findById(patient.getPersonId()).get();
-
-        final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounter.get());
-
-        return encounterDTO;
-
-    }
-
     public List<EncounterDTO> getSortedEncounter(Long pid, String serviceName, String formName, String sortField, String sortOrder, Integer limit) {
-        Pageable pageableSorter = PageRequest.of(0, 4, Sort.by("dateEncounter").descending());
+        Pageable pageableSorter = createPageRequest(sortField, sortOrder, limit);
 
-        if(sortField == null || sortOrder == null || sortOrder == null || limit == null) {
-            pageableSorter = PageRequest.of(0, 4, Sort.by("dateEncounter").descending());
-        } else if(sortOrder != null || !sortOrder.equals("") || sortOrder.equalsIgnoreCase("Asc")) {
-            pageableSorter = PageRequest.of(0, limit, Sort.by(sortField).ascending());
-        } else if(!sortOrder.equals("") || !sortOrder.equals("") || sortOrder != null || sortOrder.equalsIgnoreCase("Desc")) {
-            pageableSorter = PageRequest.of(0, limit, Sort.by(sortField).descending());
-        }
         List<Encounter> encountersList = encounterRepository.findAllByPatientIdAndServiceNameAndFormName(pid,serviceName, formName,pageableSorter);
 
-        List<EncounterDTO> encounterDTOS = new ArrayList();
-        encountersList.forEach(OneEncounter -> {
-            Patient patient = this.patientRepository.findById(OneEncounter.getPatientId()).get();
-            Person person = this.personRepository.findById(patient.getPersonId()).get();
-
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, OneEncounter);
-            log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
-
-            encounterDTOS.add(encounterDTO);
-
-        });
-
-        return encounterDTOS;
+        return listEncounter(encountersList);
     }
 
     public EncounterDTO getEncounterByVisitId(Long PatientId, String ServiceName, String FormName, Long VisitId) {
@@ -395,6 +255,32 @@ public class EncounterService {
             }
         });
        // List <Encounter> encounterList = encounterRepository.findAllByServiceNameAndFormNameAndDateEncounterIsBetweenQuery(serviceName, formName, dateStart, dateEnd);
+
+        return listEncounter(encounters);
+    }
+
+
+
+    private Pageable createPageRequest(String sortField, String sortOrder, Integer limit) {
+        if(sortField == null){
+            sortField = "dateEncounter";
+        }
+        if(limit == null){
+            limit = 4;
+        }
+        if(sortOrder != null && sortOrder.equalsIgnoreCase("Asc")) {
+            return PageRequest.of(0, limit, Sort.by(sortField).ascending());
+
+        } else if(sortOrder != null && sortOrder.equalsIgnoreCase("Desc")) {
+            return PageRequest.of(0, limit, Sort.by(sortField).descending());
+
+        }else
+        return PageRequest.of(0, limit, Sort.by(sortField).ascending());
+
+    }
+
+    //helper method looping through all encounters
+    List<EncounterDTO> listEncounter(List<Encounter> encounters){
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
         encounters.forEach(singleEncounter -> {
             Patient patient = this.patientRepository.findById(singleEncounter.getPatientId()).get();
@@ -406,8 +292,6 @@ public class EncounterService {
             encounterDTOS.add(encounterDTO);
 
         });
-
         return encounterDTOS;
-
     }
 }
