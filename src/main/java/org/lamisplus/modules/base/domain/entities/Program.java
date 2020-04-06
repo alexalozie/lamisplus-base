@@ -12,8 +12,8 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-//@Table(name = "service", schema = "public", catalog = "lamisplus")
-public class Service {
+@Table(name = "service", schema = "public", catalog = "lamisplus2")
+public class Program {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -22,7 +22,7 @@ public class Service {
 
     @Basic
     @Column(name = "name")
-    private String serviceName;
+    private String programCode;
 
     @Basic
     @Column(name = "module_id")

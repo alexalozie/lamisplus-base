@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -42,5 +39,14 @@ public class Drug {
     @Basic
     @Column(name = "abbrev")
     private String abbrev;
+
+    @Basic
+    @Column(name = "drug_group_id")
+    public Long drugGroupId;
+
+    @ManyToOne
+    @JoinColumn(name = "drug_group_id", referencedColumnName = "id", updatable = false, insertable = false)
+    @JsonIgnore
+    public DrugGroup drugGroupByDrugGroupId;
 
 }

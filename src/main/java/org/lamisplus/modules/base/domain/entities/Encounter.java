@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,11 +41,11 @@ public class Encounter extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "form_name", nullable = false, length = -1)
-    private String formName;
+    private String formCode;
 
     @Basic
     @Column(name = "service_name", nullable = false, length = -1)
-    private String serviceName;
+    private String programCode;
 
     @Basic
     @Column(name = "encounter_date")
@@ -64,6 +65,11 @@ public class Encounter extends JsonBEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "visit_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private Visit visitByVisitId;
+
+    @ManyToOne
+    @JoinColumn(name = "form_name", referencedColumnName = "name", insertable = false, updatable = false)
+    @JsonIgnore
+    public Form encounterByFormCode;
 
 
 }

@@ -16,7 +16,7 @@ public class ServiceEnrollment {
     private Long servicesId;
     private IdentifierType identifierTypeByIdentifierTypeId;
     private Patient patientByPatientId;
-    private Service serviceByServicesId;
+    private Program programByServicesId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -130,11 +130,11 @@ public class ServiceEnrollment {
 
     @ManyToOne
     @JoinColumn(name = "services_id", referencedColumnName = "id", nullable = false)
-    public Service getServiceByServicesId() {
-        return serviceByServicesId;
+    public Program getProgramByServicesId() {
+        return programByServicesId;
     }
 
-    public void setServiceByServicesId(Service serviceByServicesId) {
-        this.serviceByServicesId = serviceByServicesId;
+    public void setProgramByServicesId(Program programByServicesId) {
+        this.programByServicesId = programByServicesId;
     }
 }

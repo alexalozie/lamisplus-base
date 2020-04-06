@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface LabTestRepository extends JpaRepository<LabTest, Long> {
-    List<LabTest> findAllByLabTestCategoryId(Long labTestGroupId);
+    //List<LabTest> findAllByLabTestCategoryId(Long labTestGroupId);
+
+    List<LabTest> findAllByLabTestGroupId(Long id);
 }

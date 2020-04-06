@@ -6,10 +6,10 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entities.Form;
-import org.lamisplus.modules.base.domain.entities.Service;
+import org.lamisplus.modules.base.domain.entities.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
-import org.lamisplus.modules.base.repository.ServicesRepository;
+import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FormService {
     private final FormRepository formRepository;
-    private final ServicesRepository servicesRepository;
+    private final ProgramRepository programRepository;
     private final FormMapper formMapper;
 
     public List<FormDTO> getAllForm() {
@@ -30,7 +30,7 @@ public class FormService {
 
         List<FormDTO> formDTOList = new ArrayList();
         forms.forEach(oneForm -> {
-            if(oneForm.getServiceName().equals("GENERAL_SERVICE")) return;
+            if(oneForm.getProgramCode().equals("GENERAL_SERVICE")) return;
 
             FormDTO formDTO = formMapper.toForm(oneForm);
             formDTOList.add(formDTO);
@@ -40,11 +40,11 @@ public class FormService {
 
     public List<FormDTO> getFormByServiceCode(String serviceCode) {
         List<FormDTO> formDTOList = new ArrayList();
-        List<Form> formList = this.formRepository.findByServiceName(serviceCode);
-        if(formList.size() < 1 || formList == null) throw new EntityNotFoundException(Form.class, "Service Code", serviceCode);
+        List<Form> formList = this.formRepository.findByProgramCode(serviceCode);
+        if(formList.size() < 1 || formList == null) throw new EntityNotFoundException(Form.class, "Program Code", serviceCode);
 
         formList.forEach(oneForm -> {
-            if(oneForm.getServiceName().equals("GENERAL_SERVICE")) return;
+            if(oneForm.getProgramCode().equals("GENERAL_SERVICE")) return;
 
             FormDTO formDTO = formMapper.toForm(oneForm);
             formDTOList.add(formDTO);
@@ -54,10 +54,10 @@ public class FormService {
 
 
     public Form save(FormDTO formDTO) {
-        Optional <Service> service = this.servicesRepository.findByServiceName(formDTO.getServiceName());
-        if(!service.isPresent()) throw new EntityNotFoundException(Service.class, "Service Name", formDTO.getServiceName());
+        Optional <Program> service = this.programRepository.findByProgramCode(formDTO.getProgramCode());
+        if(!service.isPresent()) throw new EntityNotFoundException(Program.class, "Program Name", formDTO.getProgramCode());
 
-        Optional<Form> formOptional = this.formRepository.findByName(formDTO.getName());
+        Optional<Form> formOptional = this.formRepository.findByCode(formDTO.getName());
         if(formOptional.isPresent()) throw new RecordExistException(Form.class, "Form Name", formDTO.getName());
 
         final Form form = this.formMapper.toFormDTO(formDTO);
@@ -66,8 +66,8 @@ public class FormService {
     }
 
     public FormDTO getFormByFormIdAndServiceCode(Long Id, String serviceCode) {
-        Optional<Form> formOptional= this.formRepository.findByIdAndServiceName(Id, serviceCode);
-        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Service Code", serviceCode);
+        Optional<Form> formOptional= this.formRepository.findByIdAndProgramCode(Id, serviceCode);
+        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Program Code", serviceCode);
 
         FormDTO formDTO = formMapper.toForm(formOptional.get());
         log.info("FormDTO - " + formDTO);

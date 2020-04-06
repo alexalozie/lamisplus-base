@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Collection;
 
 @Data
 @Entity
@@ -26,7 +28,7 @@ public class Form extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "name")
     @NotNull
-    private String name;
+    private String code;
 
     @Type(type = "jsonb")
     @Basic(fetch = FetchType.LAZY)
@@ -39,7 +41,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "service_name")
-    private String serviceName;
+    private String programCode;
 
     @Basic
     @Column(name = "version")
@@ -48,5 +50,9 @@ public class Form extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "display_name")
     private String displayName;
+
+    @OneToMany(mappedBy = "encounterByFormCode")
+    @JsonIgnore
+    private Collection<Encounter> formByCode;
 
 }

@@ -4,6 +4,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.entities.Country;
+import org.lamisplus.modules.base.domain.entities.Province;
 import org.lamisplus.modules.base.domain.entities.State;
 import org.lamisplus.modules.base.repository.CountriesRepository;
 import org.lamisplus.modules.base.repository.StateRepository;
@@ -27,46 +28,40 @@ public class StateController {
     private final CountriesRepository countryRepository;
     private final StateService stateService;
 
-    private static Object exist(State o) {
-        throw new EntityNotFoundException(State.class, "Id", String.valueOf(o.getId()));
-    }
-
-    private static State notExit() {
-        throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "id is null");
-    }
-
 
     @PostMapping
-    public ResponseEntity<State> save(@RequestBody State state) throws URISyntaxException {
-        stateRepository.findById(state.getId()).map(StateController::exist);
-        State result = stateService.save(state);
+    public ResponseEntity<State> save(@RequestParam Long countryId, @RequestBody State state) throws URISyntaxException {
+
+        State result = stateService.save(countryId, state);
         return ResponseEntity.created(new URI("/api/state/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
     }
 
-    @PutMapping
-    public ResponseEntity<State> update(@RequestBody State state) throws URISyntaxException {
-        Optional<State> country1 = this.stateRepository.findById(state.getId());
-        country1.orElseGet(StateController::notExit);
-        State result = stateService.update(state);
+    @PutMapping("/{id}")
+    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) throws URISyntaxException {
+        State result = stateService.update(id, state);
         return ResponseEntity.created(new URI("/api/state/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
                 .body(result);
     }
 
     @GetMapping
-    public ResponseEntity<List<State>> getAllState() {
+    public ResponseEntity<List<State>> getAllStates() {
         return ResponseEntity.ok(this.stateRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<State> getState(@PathVariable Long id) {
+        return ResponseEntity.ok(stateService.getState(id));
+    }
 
-    @GetMapping("/country/{stateId}")
-    public ResponseEntity<List<State>> getAllCountry(@PathVariable Long stateId) {
-        Optional<Country> country = this.countryRepository.findById(stateId);
-        if (country.isPresent()){
-            Country country1 = country.get();
-            List<State> stateSet = this.stateRepository.findBycountryByCountryId(country1);
-            return ResponseEntity.ok(stateSet);
-        } else throw new EntityNotFoundException(State.class, "Id", stateId +"");
+    @GetMapping("/{id}/provinces")
+    public ResponseEntity<List<Province>> getProvincesByStateId(@PathVariable Long id) {
+        return ResponseEntity.ok(stateService.getProvincesByStateId(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Long id, @RequestBody State state) throws RecordNotFoundException {
+        return this.stateService.delete(id, state);
     }
 }

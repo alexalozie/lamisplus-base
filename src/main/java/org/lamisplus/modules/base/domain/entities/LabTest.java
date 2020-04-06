@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @EqualsAndHashCode
-//@Table(name = "lab_test", schema = "public", catalog = "lamisplus")
+@Table(name = "lab_test", schema = "public", catalog = "lamisplus2")
 public class LabTest {
     @Id
     @Column(name = "id", nullable = false)
@@ -19,7 +19,7 @@ public class LabTest {
 
     @Basic
     @Column(name = "lab_test_category_id", nullable = true)
-    private Long labTestCategoryId;
+    private Long labTestGroupId;
 
     @Basic
     @Column(name = "description", nullable = true, length = -1)

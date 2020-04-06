@@ -42,26 +42,7 @@ public class VisitService {
     private final PersonRepository personRepository;
     private final VisitMapper visitMapper;
 
-    private static Object exist(Visit o) {
-        throw new RecordExistException(Visit.class, "Id", o.getId()+ ", Date Visit Start=" + o.getDateVisitStart());
-    }
-
-    //Saving a Visit/ Checking in a patient
-    public Visit save(VisitDTO visitDTO) {
-        Optional<Visit> visit1 = this.visitRepository.findByPatientIdAndDateVisitStart(visitDTO.getPatientId(), visitDTO.getDateVisitStart());
-        visit1.map(VisitService::exist);
-
-        Optional <Patient> patient = patientRepository.findById(visitDTO.getPatientId());
-        if(!patient.isPresent())throw new EntityNotFoundException(Patient.class, "Id", visitDTO.getPatientId()+"");
-
-
-        Visit visit = visitMapper.toVisit(visitDTO);
-        visit.setPatient(patient.get());
-        this.visitRepository.save(visit);
-        return visit;
-    }
-
-    public List<VisitDTO> getSortedVisit(Optional <Long> patientId, Optional<String> dateStart, Optional<String> dateEnd) {
+    public List<VisitDTO> getVisitByPatientIdAndVisitDate(Optional <Long> patientId, Optional<String> dateStart, Optional<String> dateEnd) {
 
         List<Visit> visits = visitRepository.findAll(new Specification<Visit>() {
             @Override
@@ -87,6 +68,51 @@ public class VisitService {
             }
         });
 
+        return visitList(visits);
+    }
+
+
+    public List<VisitDTO> getAllVisits() {
+        List<Visit> visits = visitRepository.findAll();
+        return visitList(visits);
+
+    }
+
+    //Saving a Visit/ Checking in a patient
+    public Visit save(VisitDTO visitDTO) {
+        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitStart(visitDTO.getPatientId(), visitDTO.getDateVisitStart());
+        if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Id", visitOptional.get().getId()+"");
+
+        Optional <Patient> patient = patientRepository.findById(visitDTO.getPatientId());
+        if(!patient.isPresent())throw new EntityNotFoundException(Patient.class, "Id", visitDTO.getPatientId()+"");
+
+        Visit visit = visitMapper.toVisit(visitDTO);
+        //visit.setPatientByPatientId(patient.get());
+        this.visitRepository.save(visit);
+        return visit;
+    }
+
+
+    public VisitDTO getVisit(Long id) {
+        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        Optional<Person> personOptional = this.personRepository.findById(visitOptional.get().getPatient().getPersonId());
+        VisitDTO visitDTO = visitMapper.toVisitDTO(visitOptional.get(), personOptional.get());
+        return visitDTO;
+    }
+
+    public Visit update(Long id, Visit visit) {
+        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class, "Id", id +"");
+        visit.setId(id);
+        return visitRepository.save(visit);
+    }
+
+    public Boolean delete(Long id, Visit visit) {
+        return true;
+    }
+
+    public List<VisitDTO> visitList(List<Visit> visits){
         List<VisitDTO> visitDTOs = new ArrayList<>();
         visits.forEach(visit -> {
             Patient patient = patientRepository.getOne(visit.getPatient().getId());
@@ -97,5 +123,16 @@ public class VisitService {
             visitDTOs.add(visitDTO);
         });
         return visitDTOs;
+
     }
-    }
+
+
+
+
+
+
+
+
+
+
+}

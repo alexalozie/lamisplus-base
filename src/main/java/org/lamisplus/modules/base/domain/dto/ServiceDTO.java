@@ -11,7 +11,7 @@ public class ServiceDTO {
 
     private Long id;
 
-    private String serviceName;
+    private String programCode;
 
     private Long moduleId;
 

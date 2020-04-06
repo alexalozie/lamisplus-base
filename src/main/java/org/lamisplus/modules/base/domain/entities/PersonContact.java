@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @EqualsAndHashCode
-//@Table(name = "person_contact", schema = "public", catalog = "lamisplus")
+@Table(name = "person_contact", schema = "public", catalog = "lamisplus2")
 public class PersonContact {
 
     @Id

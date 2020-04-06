@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ProvinceRepository extends JpaRepository<Province, Long> {
     List<Province> findByStateId(Long  stateId);
     Optional<Province> findByName(String provinceName);
+
+    List<Province> findAllByStateId(Long stateId);
 }

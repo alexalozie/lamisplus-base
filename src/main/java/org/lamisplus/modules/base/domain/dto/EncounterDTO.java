@@ -19,8 +19,8 @@ public class EncounterDTO implements Serializable {
     @JsonIgnore
     private Long personId;
     private Object formData;
-    private String formName;
-    private String serviceName;
+    private String formCode;
+    private String programCode;
 
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

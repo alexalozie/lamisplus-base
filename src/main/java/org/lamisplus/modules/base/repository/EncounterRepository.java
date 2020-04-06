@@ -17,35 +17,37 @@ import java.util.Optional;
 //EncounterRepository
 public interface EncounterRepository extends JpaRepository<Encounter, Long> , JpaSpecificationExecutor {
     //Encounter
-    Optional<Encounter> findByPatientIdAndServiceNameAndFormNameAndVisitId(Long patientId, String serviceName, String formName, Long visitId);
+    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndVisitId(Long patientId, String ProgramCode, String FormCode, Long visitId);
 
-    Optional<Encounter> findByPatientIdAndServiceNameAndFormNameAndDateEncounter(Long patientId, String serviceName, String formName, LocalDate dateFncounter);
+    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);
 
     List<Encounter> findBypatientId(Long PatientId);
 
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
-    Optional<Encounter> findFirstByPatientIdAndServiceNameAndFormNameOrderByDateEncounterDesc(Long patientId, String serviceName, String formName);
+    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
 
-    //Optional<Encounter> findByMaxDAndDateEncounter(String formName, Long patientId);
-    List<Encounter> findAllByPatientIdAndServiceNameAndFormNameOrderByDateEncounterDesc(Long patientId, String serviceName, String formName);
+    //Optional<Encounter> findByMaxDAndDateEncounter(String formCode, Long patientId);
+    List<Encounter> findAllByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
 
-    List<Encounter> findAllByServiceNameAndFormNameAndDateEncounterOrderByDateEncounterDesc(String serviceName, String formName, LocalDate DateEncounter);
+    List<Encounter> findAllByProgramCodeAndFormCodeAndDateEncounterOrderByDateEncounterDesc(String ProgramCode, String FormCode, LocalDate DateEncounter);
 
-    Optional <Encounter> findTopByServiceNameAndFormNameAndPatientIdOrderByDateEncounterAsc(String serviceName, String formName, Long patientId);
+    Optional <Encounter> findTopByProgramCodeAndFormCodeAndPatientIdOrderByDateEncounterAsc(String ProgramCode, String FormCode, Long patientId);
 
-    Optional <Encounter> findTopByServiceNameAndFormNameAndPatientIdOrderByDateEncounterDesc(String serviceName, String formName, Long patientId);
+    Optional <Encounter> findTopByProgramCodeAndFormCodeAndPatientIdOrderByDateEncounterDesc(String ProgramCode, String FormCode, Long patientId);
 
-    List<Encounter> findAllByPatientIdAndServiceNameAndFormNameAndDateEncounterBetween(Long patientId, String serviceName, String formName, LocalDate firstDate, LocalDate endDate);
+    List<Encounter> findAllByPatientIdAndProgramCodeAndFormCodeAndDateEncounterBetween(Long patientId, String ProgramCode, String FormCode, LocalDate firstDate, LocalDate endDate);
 
-    @Query("select e from Encounter e where e.serviceName=?1 and e.formName=?2 " +
+    @Query("select e from Encounter e where e.programCode=?1 and e.formCode=?2 " +
             "and e.dateEncounter >= ?3 and e.dateEncounter <= ?4")
-    List<Encounter> findAllByServiceNameAndFormNameAndDateEncounterIsBetweenQuery(String serviceName, String formName, LocalDate dateStart, LocalDate dateEnd);
+    List<Encounter> findAllByProgramCodeAndFormCodeAndDateEncounterIsBetweenQuery(String ProgramCode, String FormCode, LocalDate dateStart, LocalDate dateEnd);
 
-/*    @Query("select e from Encounter e where e.patientId=?1 and e.serviceName=?2 and e.formName=?3 " +
+/*    @Query("select e from Encounter e where e.patientId=?1 and e.programCode=?2 and e.formCode=?3 " +
             "and e.dateEncounter >= ?4 and e.dateEncounter <= ?5 order by ?6, LIMIT = ?7")*/
-    List <Encounter> findAllByPatientIdAndServiceNameAndFormName(Long patientId, String serviceName, String formName, Pageable pageable);
+    List <Encounter> findAllByPatientIdAndProgramCodeAndFormCode(Long patientId, String ProgramCode, String FormCode, Pageable pageable);
 
-    Optional<Encounter> findFirstByPatientIdAndServiceNameAndFormNameAndVisitIdOrderByDateEncounterDesc(Long patientId, String serviceName,String formName, Long visitId);
+    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeAndVisitIdOrderByDateEncounterDesc(Long patientId, String ProgramCode,String FormCode, Long visitId);
+
+    List<Encounter> findAllByPatientIdAndFormCode(Long patientId, String formCode);
 
 
 }

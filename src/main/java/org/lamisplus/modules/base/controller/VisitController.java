@@ -35,55 +35,34 @@ public class VisitController {
     private final VisitService visitService;
 
     @GetMapping
-    public Iterable findAll() {
-        return visitRepository.findAll();
+    public ResponseEntity<List<VisitDTO>> getAllVisits() {
+        return ResponseEntity.ok(visitService.getAllVisits());
     }
 
     @GetMapping("/{id}")
-    public Visit getSinglePatient(@PathVariable Long id) {
-        return visitRepository.findById(id)
-                .orElseThrow(RecordNotFoundException::new);
+    public ResponseEntity<VisitDTO> getVisit(@PathVariable Long id) {
+        return ResponseEntity.ok(visitService.getVisit(id));
     }
-
-    @ApiOperation(value="getSortedVisit", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - /api/visits/patient/20/?dateStart=02-03-2020")
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<VisitDTO>> getSortedVisit(@PathVariable Optional<Long> patientId, @RequestParam(required = false) Optional<String> dateStart,
-                                                         @RequestParam(required = false) Optional <String> dateEnd) {
-       /* // WORK ON IT
-        if (visitRepository.findByPatientId(patientId).size() < 1)
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Patients Not Found", new RecordNotFoundException(patientId.toString()));
-        else
-            return visitRepository.findByPatientId(patientId);
-*/
-        return ResponseEntity.ok(visitService.getSortedVisit(patientId,dateStart,dateEnd));
-    }
-
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Visit> saveVisit(@RequestBody VisitDTO visitDTO) throws URISyntaxException {
+    public ResponseEntity<Visit> save(@RequestBody VisitDTO visitDTO) throws URISyntaxException {
         Visit visit1 = this.visitService.save(visitDTO);
         return ResponseEntity.created(new URI("/api/visits/" + visit1.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(visit1.getId()))).body(visit1);
     }
 
     @PutMapping("/{id}")
-    public Visit updateVisit(@RequestBody Visit visit, @PathVariable Long id) {
-        if (visit.getId() != (id)) {
-            throw new RecordIdMismatchException(id);
-        }
-        visitRepository.findById(id)
-                .orElseThrow(RecordNotFoundException::new);
-        return visitRepository.save(visit);
+    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) throws URISyntaxException{
+        Visit result = visitService.update(id, visit);
+        return ResponseEntity.created(new URI("/api/state/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
+                .body(result);
     }
 
     @DeleteMapping("/{id}")
-    public void archiveVisit(@PathVariable Long id) {
-        visitRepository.findById(id)
-                .orElseThrow(RecordNotFoundException::new);
-        visitRepository.deleteById(id);
+    public Boolean delete(@PathVariable Long id, @RequestBody Visit visit) throws RecordNotFoundException {
+        return this.visitService.delete(id, visit);
     }
 }
