@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "identifier_type", schema = "public", catalog = "lamisplus")
+//@Table(name = "identifier_type", schema = "public", catalog = "lamisplus")
 @EqualsAndHashCode
 public class IdentifierType {
     private Long id;

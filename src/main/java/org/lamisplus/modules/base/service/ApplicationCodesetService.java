@@ -25,14 +25,6 @@ public class ApplicationCodesetService {
     private final ApplicationCodesetRepository appCodesetRepo;
     private final ApplicationCodesetMapper applicationCodesetMapper;
 
-/*
-    public List<ApplicationCodeset> getAllByCodesetGroup(String codesetGroup){
-        List<ApplicationCodeset> applicationCodesetList = appCodesetRepo.findBycodesetGroup(codesetGroup);
-        if(applicationCodesetList.size() < 1)
-            throw new EntityNotFoundException(ApplicationCodeset.class,"Codeset Group:", codesetGroup);
-        return applicationCodesetList;
-    }
-*/
 
     public List<ApplicationCodeset> getAllApplicationCodeset(){
         return appCodesetRepo.findAll();
@@ -46,14 +38,39 @@ public class ApplicationCodesetService {
         return appCodesetRepo.save(applicationCodeset);
     }
 
-    public List<ApplicationCodeset> getApplicationCodesetByGroup(String codeSetGroup){
-        List<ApplicationCodeset> applicationCodesetList = appCodesetRepo.findAllByCodesetGroup(codeSetGroup);
+    public List<ApplicationCodeset> getApplicationCodeByCodesetGroup(String codeSetGroup){
+        List<ApplicationCodeset> applicationCodesetList = appCodesetRepo.findAllByCodesetGroupOrderByIdAsc(codeSetGroup);
         List<ApplicationCodesetDTO> applicationCodesetDTOList = new ArrayList<>();
         applicationCodesetList.forEach(applicationCodeset -> {
+            //if(applicationCodeset.getActive() == 1) return;
             final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
             applicationCodesetDTOList.add(applicationCodesetDTO);
         });
         return applicationCodesetList;
+    }
+
+    public ApplicationCodesetDTO getApplicationCodeset(Long id){
+        Optional<ApplicationCodeset> applicationCodeset = appCodesetRepo.findById(id);
+        if(!applicationCodeset.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
+        final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset.get());
+
+        return  applicationCodesetDTO;
+    }
+
+    public ApplicationCodeset update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
+        Optional<ApplicationCodeset> applicationCodesetOptional = appCodesetRepo.findById(id);
+        if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
+        final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
+        applicationCodeset.setId(id);
+        log.info("applicationCodeset updated successfully");
+        return appCodesetRepo.save(applicationCodeset);
+    }
+
+    public Boolean delete(Long id){
+        Optional<ApplicationCodeset> applicationCodesetOptional = appCodesetRepo.findById(id);
+        if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
+        applicationCodesetOptional.get().setArchived(1);
+        return true;
     }
 
 }

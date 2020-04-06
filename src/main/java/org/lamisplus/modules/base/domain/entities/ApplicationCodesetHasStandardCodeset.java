@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "application_codeset_has_standard_codeset", schema = "public", catalog = "lamisplus")
+@Table(name = "application_codeset_has_standard_codeset", schema = "public", catalog = "lamisplus2")
 @IdClass(ApplicationCodesetHasStandardCodesetPK.class)
 public class ApplicationCodesetHasStandardCodeset {
     private Long applicationCodesetId;

@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "facility_service", schema = "public", catalog = "lamisplus")
+/*@Table(name = "facility_service", schema = "public", catalog = "lamisplus")*/
 @EqualsAndHashCode
 public class FacilityService {
     @Id

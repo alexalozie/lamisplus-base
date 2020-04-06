@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "patient", schema = "public", catalog = "lamisplus")
+//@Table(name = "patient", schema = "public", catalog = "lamisplus2")
 public class Patient {
 
     @Id

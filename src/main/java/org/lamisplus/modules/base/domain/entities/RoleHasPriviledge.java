@@ -9,7 +9,7 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "role_has_priviledge", schema = "public", catalog = "lamisplus")
+//@Table(name = "role_has_priviledge", schema = "public", catalog = "lamisplus")
 @IdClass(RoleHasPriviledgePK.class)
 public class RoleHasPriviledge {
     private Long roleId;

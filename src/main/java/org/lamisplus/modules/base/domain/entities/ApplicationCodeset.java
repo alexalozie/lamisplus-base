@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -8,7 +9,7 @@ import java.util.Collection;
 import java.util.Objects;
 @Data
 @Entity
-@Table(name = "application_codeset", schema = "public", catalog = "lamisplus")
+@Table(name = "application_codeset", schema = "public", catalog = "lamisplus2")
 @EqualsAndHashCode
 public class ApplicationCodeset {
     @Id
@@ -39,5 +40,10 @@ public class ApplicationCodeset {
     @Basic
     @Column(name = "code", nullable = true)
     private String code;
+
+    @Basic
+    @Column(name = "archived", nullable = true)
+    @JsonIgnore
+    private Integer archived;
 
 }

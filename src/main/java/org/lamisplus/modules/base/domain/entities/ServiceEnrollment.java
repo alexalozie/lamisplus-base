@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "service_enrollment", schema = "public", catalog = "lamisplus")
+//@Table(name = "service_enrollment", schema = "public", catalog = "lamisplus")
 public class ServiceEnrollment {
     private Long id;
     private LocalDate dateEnrollment;

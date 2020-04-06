@@ -18,4 +18,6 @@ public interface ApplicationCodesetRepository extends JpaRepository<ApplicationC
     Optional<ApplicationCodeset> findByDisplayAndCodesetGroup(String display, String codeSetGroup);
 
     List<ApplicationCodeset> findAllByCodesetGroup(String codeSetGroup);
+
+    List<ApplicationCodeset> findAllByCodesetGroupOrderByIdAsc(String codeSetGroup);
 }

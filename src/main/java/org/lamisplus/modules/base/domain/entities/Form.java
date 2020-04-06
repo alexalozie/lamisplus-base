@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "form", schema = "public", catalog = "lamisplus")
+//@Table(name = "form", schema = "public", catalog = "lamisplus")
 @EqualsAndHashCode
 public class Form extends JsonBEntity implements Serializable {
 

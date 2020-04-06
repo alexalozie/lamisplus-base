@@ -10,7 +10,7 @@ import java.util.Collection;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "lab_test_group", schema = "public", catalog = "lamisplus")
+//@Table(name = "lab_test_group", schema = "public", catalog = "lamisplus")
 public class LabTestGroup {
     @Id
     @Column(name = "id", nullable = false)

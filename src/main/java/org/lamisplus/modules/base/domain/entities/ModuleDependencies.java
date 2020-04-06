@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "module_dependencies", schema = "public", catalog = "lamisplus")
+//@Table(name = "module_dependencies", schema = "public", catalog = "lamisplus")
 public class ModuleDependencies {
 
     @Id

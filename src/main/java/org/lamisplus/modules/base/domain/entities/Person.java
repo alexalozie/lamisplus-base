@@ -13,7 +13,7 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "person", schema = "public", catalog = "lamisplus")
+//@Table(name = "person", schema = "public", catalog = "lamisplus")
 public class Person {
 
     @Id

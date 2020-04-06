@@ -15,7 +15,9 @@ import java.time.LocalTime;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+/*
 @Table(name = "encounter", schema = "public", catalog = "lamisplus")
+*/
 @EqualsAndHashCode
 public class Encounter extends JsonBEntity implements Serializable {
     @Id

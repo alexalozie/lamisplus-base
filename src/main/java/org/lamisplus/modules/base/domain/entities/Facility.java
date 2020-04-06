@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "facility", schema = "public", catalog = "lamisplus")
+//@Table(name = "facility", schema = "public", catalog = "lamisplus2")
 @EqualsAndHashCode
 public class Facility {
     @Id

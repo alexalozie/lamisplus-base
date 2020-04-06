@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "lab_test", schema = "public", catalog = "lamisplus")
+//@Table(name = "lab_test", schema = "public", catalog = "lamisplus")
 public class LabTest {
     @Id
     @Column(name = "id", nullable = false)

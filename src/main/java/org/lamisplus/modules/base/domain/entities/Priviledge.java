@@ -9,7 +9,7 @@ import java.util.Collection;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "priviledge", schema = "public", catalog = "lamisplus")
+//@Table(name = "priviledge", schema = "public", catalog = "lamisplus")
 public class Priviledge {
 
     @Id

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "clinician_patient", schema = "public", catalog = "lamisplus")
+//@Table(name = "clinician_patient", schema = "public", catalog = "lamisplus")
 public class ClinicianPatient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

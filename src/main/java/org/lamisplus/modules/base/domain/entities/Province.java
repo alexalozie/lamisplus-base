@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "province", schema = "public", catalog = "lamisplus")
+//@Table(name = "province", schema = "public", catalog = "lamisplus")
 public class Province {
 
     @Id

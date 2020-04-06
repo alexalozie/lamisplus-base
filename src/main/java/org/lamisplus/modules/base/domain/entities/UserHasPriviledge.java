@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_has_priviledge", schema = "public", catalog = "lamisplus")
+//@Table(name = "user_has_priviledge", schema = "public", catalog = "lamisplus")
 @IdClass(UserHasPriviledgePK.class)
 public class UserHasPriviledge {
     private Long userId;

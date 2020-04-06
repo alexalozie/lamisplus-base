@@ -10,7 +10,7 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "role", schema = "public", catalog = "lamisplus")
+//@Table(name = "role", schema = "public", catalog = "lamisplus")
 public class Role {
     private Integer id;
     private Integer name;

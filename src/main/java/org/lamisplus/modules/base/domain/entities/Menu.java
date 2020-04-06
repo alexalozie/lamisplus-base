@@ -9,7 +9,7 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "menu", schema = "public", catalog = "lamisplus")
+//@Table(name = "menu", schema = "public", catalog = "lamisplus")
 public class Menu {
 
     @Id
