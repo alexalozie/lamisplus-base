@@ -3,7 +3,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.entities.Drug;
+import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.service.DrugService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.entities.Form;
+import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.service.FormService;
 
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,9 @@ public class FormController {
             return ResponseEntity.ok(this.formService.getFormByServiceCode(serviceCode));
         }
     }
-    @GetMapping ("/{formId}/{serviceName}")
-    public ResponseEntity<FormDTO> getFormByIdAndServiceName(@PathVariable Long formId, @PathVariable String serviceName) {
-            return ResponseEntity.ok(this.formService.getFormByFormIdAndServiceCode(formId, serviceName));
+    @GetMapping ("/{formId}/{programCode}")
+    public ResponseEntity<FormDTO> getFormByFormIdAndProgramCode(@PathVariable Long formId, @PathVariable String programCode) {
+            return ResponseEntity.ok(this.formService.getFormByFormIdAndProgramCode(formId, programCode));
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

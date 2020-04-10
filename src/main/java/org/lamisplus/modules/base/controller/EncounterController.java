@@ -1,16 +1,12 @@
 package org.lamisplus.modules.base.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.domain.entities.Encounter;
+import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.service.EncounterService;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.util.converter.LocalDateConverter;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -40,6 +36,17 @@ public class EncounterController {
     @GetMapping
     public ResponseEntity<List<EncounterDTO>> getAllEncounters() {
         return ResponseEntity.ok(this.encounterService.getAllEncounters());
+    }
+
+    //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION all patients)
+    @ApiOperation(value="getEncounterByFormCodeAndDateEncounter", notes = " formCode=required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
+    @GetMapping("/{formCode}/date")
+    public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDate(@PathVariable String formCode,
+                                                                 @RequestParam(required = false) Optional<String> dateStart,
+                                                                 @RequestParam(required = false) Optional<String> dateEnd) throws URISyntaxException {
+        List<EncounterDTO> encounterDTOS = this.encounterService.getEncounterByFormCodeAndDate(formCode, dateStart, dateEnd);
+        return ResponseEntity.ok(encounterDTOS);
     }
 
     @GetMapping("/{id}")

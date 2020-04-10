@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.entities.Drug;
+import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.repository.DrugGroupRepository;
 import org.lamisplus.modules.base.repository.DrugRepository;
 import org.springframework.stereotype.Service;

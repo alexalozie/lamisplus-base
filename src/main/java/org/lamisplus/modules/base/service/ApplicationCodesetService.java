@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.entities.ApplicationCodeset;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,6 @@ public class ApplicationCodesetService {
         List<ApplicationCodeset> applicationCodesetList = appCodesetRepo.findAllByCodesetGroupOrderByIdAsc(codeSetGroup);
         List<ApplicationCodesetDTO> applicationCodesetDTOList = new ArrayList<>();
         applicationCodesetList.forEach(applicationCodeset -> {
-            //if(applicationCodeset.getActive() == 1) return;
             final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
             applicationCodesetDTOList.add(applicationCodesetDTO);
         });
@@ -66,11 +65,11 @@ public class ApplicationCodesetService {
         return appCodesetRepo.save(applicationCodeset);
     }
 
-    public Boolean delete(Long id){
+    public Integer delete(Long id){
         Optional<ApplicationCodeset> applicationCodesetOptional = appCodesetRepo.findById(id);
         if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         applicationCodesetOptional.get().setArchived(1);
-        return true;
+        return applicationCodesetOptional.get().getArchived();
     }
 
 }

@@ -2,12 +2,10 @@ package org.lamisplus.modules.base.controller;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
-import org.lamisplus.modules.base.domain.entities.Patient;
-import org.lamisplus.modules.base.domain.entities.Person;
-import org.lamisplus.modules.base.repository.*;
-import org.lamisplus.modules.base.service.EncounterService;
+import org.lamisplus.modules.base.domain.entity.Patient;
+import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
 import org.lamisplus.modules.base.service.VisitService;
 import org.springframework.http.HttpStatus;
@@ -16,11 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/patients")
@@ -49,41 +46,47 @@ public class PatientController {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(person.getId()))).body(person);
     }
 
-    @PutMapping("/{hospitalNumber}")
-    public Person update(@PathVariable String hospitalNumber, @RequestBody PatientDTO patientDTO) throws RecordNotFoundException {
-        return this.patientService.update(hospitalNumber, patientDTO);
+    @PutMapping("/{id}")
+    public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+        return this.patientService.update(id, patientDTO);
     }
 
-    @GetMapping("/{id}/encounters/{programCode}/{formCode}/{visitId}")
+  /*  @GetMapping("/{id}/encounters/{programCode}/{formCode}/{visitId}")
     public ResponseEntity<EncounterDTO> getEncountersByPatientIdAndVisitId(@PathVariable Long id, @PathVariable String programCode,
                                                                            @PathVariable String formCode, @PathVariable Long visitId) throws URISyntaxException {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndVisitId(id, programCode, formCode, visitId));
     }
-
-    @GetMapping("/{id}/encounter/{programCode}/{formCode}")
-    public ResponseEntity<List<EncounterDTO>> getEncountersByPatientId(@PathVariable Long id, @PathVariable String programCode,
+*/
+    @GetMapping("/{id}/encounters/{formCode}")
+    public ResponseEntity<List> getEncountersByPatientId(@PathVariable Long id,
                                                                        @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                        @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit) throws URISyntaxException {
-        return ResponseEntity.ok(this.patientService.getEncountersByPatientId(id, programCode, formCode, sortField, sortOrder, limit));
+        return ResponseEntity.ok(this.patientService.getEncountersByPatientId(id, formCode, sortField, sortOrder, limit));
+    }
+    @GetMapping("/{id}/encounters/programCodeExclusionList")
+    public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) throws URISyntaxException {
+        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
+
     @ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - /api/visits/patient/20/?dateStart=02-03-2020")
+            "Example - /api/patient/20/visits?dateStart=02-03-2020")
     @GetMapping("/{id}/visits")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @RequestParam(required = false) Optional<String> dateStart,
                                                                           @RequestParam(required = false) Optional <String> dateEnd) {
-        return ResponseEntity.ok(visitService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
+        return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
     //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION all patients)
-    @ApiOperation(value="getEncounterByDate", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
+    @ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
-    @GetMapping("/{id}/encounters/{programCode}/{formCode}")
-    public ResponseEntity<List<EncounterDTO>> getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String programCode, @PathVariable String formCode,
+    @GetMapping("/{id}/encounters/{formCode}/date")
+    public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
                                                                                        @RequestParam(required = false) Optional<String> dateStart,
                                                                                        @RequestParam(required = false) Optional<String> dateEnd) throws URISyntaxException {
-        List<EncounterDTO> encounterDTOS = this.patientService.getEncountersByPatientIdAndDateEncounter(id, programCode, formCode, dateStart, dateEnd);
-        return ResponseEntity.ok(encounterDTOS);
+        List formDataList = this.patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
+        log.info("GETTING encounterList 123 in List by formDataList... " + formDataList);
+        return formDataList;
     }
 
     //GETTING ENCOUNTER BY PATIENT ID
@@ -91,7 +94,7 @@ public class PatientController {
             "Example - /api/encounters/20")
     @GetMapping("/{id}/encounters")
     //@ResponseStatus(reason = "Some parameters are invalid")
-    public ResponseEntity<List<EncounterDTO>> getAllEncounterByPatientId(@PathVariable Long id) throws BadRequestAlertException {
+    public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id) throws BadRequestAlertException {
         return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
     }
 
@@ -100,12 +103,6 @@ public class PatientController {
     public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
         return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
     }*/
-
-    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/{formCode}")
-    public ResponseEntity<List<Object>> testing(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.testing(id, formCode));
-    }
 
 
 /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")

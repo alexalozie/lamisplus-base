@@ -1,6 +1,6 @@
 package org.lamisplus.modules.base.repository;
 
-import org.lamisplus.modules.base.domain.entities.Program;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findByModuleId(Long moduleId);
 
-    Optional<Program> findByProgramCode(String programCode);
+    Optional<Program> findByCode(String programCode);
 }
 

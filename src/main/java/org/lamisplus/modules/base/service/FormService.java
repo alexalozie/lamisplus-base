@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
-import org.lamisplus.modules.base.domain.entities.Form;
-import org.lamisplus.modules.base.domain.entities.Program;
+import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
@@ -54,7 +54,7 @@ public class FormService {
 
 
     public Form save(FormDTO formDTO) {
-        Optional <Program> service = this.programRepository.findByProgramCode(formDTO.getProgramCode());
+        Optional <Program> service = this.programRepository.findByCode(formDTO.getProgramCode());
         if(!service.isPresent()) throw new EntityNotFoundException(Program.class, "Program Name", formDTO.getProgramCode());
 
         Optional<Form> formOptional = this.formRepository.findByCode(formDTO.getName());
@@ -65,7 +65,7 @@ public class FormService {
         return this.formRepository.save(form);
     }
 
-    public FormDTO getFormByFormIdAndServiceCode(Long Id, String serviceCode) {
+    public FormDTO getFormByFormIdAndProgramCode(Long Id, String serviceCode) {
         Optional<Form> formOptional= this.formRepository.findByIdAndProgramCode(Id, serviceCode);
         if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Program Code", serviceCode);
 

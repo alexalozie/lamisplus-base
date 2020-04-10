@@ -3,13 +3,8 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ProvinceDTO;
-import org.lamisplus.modules.base.domain.entities.Province;
-import org.lamisplus.modules.base.domain.entities.State;
-import org.lamisplus.modules.base.repository.ProvinceRepository;
-import org.lamisplus.modules.base.repository.StateRepository;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
+import org.lamisplus.modules.base.domain.entity.Province;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.service.ProvinceService;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/provinces")

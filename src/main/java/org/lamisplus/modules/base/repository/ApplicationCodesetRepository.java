@@ -1,7 +1,7 @@
 package org.lamisplus.modules.base.repository;
 
 
-import org.lamisplus.modules.base.domain.entities.ApplicationCodeset;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

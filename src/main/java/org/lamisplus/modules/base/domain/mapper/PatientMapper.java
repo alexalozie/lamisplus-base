@@ -1,10 +1,10 @@
 package org.lamisplus.modules.base.domain.mapper;
 
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
-import org.lamisplus.modules.base.domain.entities.Patient;
-import org.lamisplus.modules.base.domain.entities.Person;
-import org.lamisplus.modules.base.domain.entities.PersonContact;
-import org.lamisplus.modules.base.domain.entities.Visit;
+import org.lamisplus.modules.base.domain.entity.Patient;
+import org.lamisplus.modules.base.domain.entity.Person;
+import org.lamisplus.modules.base.domain.entity.PersonContact;
+import org.lamisplus.modules.base.domain.entity.Visit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

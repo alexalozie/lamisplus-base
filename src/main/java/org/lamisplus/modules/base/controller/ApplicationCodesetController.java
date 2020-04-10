@@ -4,9 +4,8 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.entities.ApplicationCodeset;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.service.ApplicationCodesetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +55,7 @@ public class ApplicationCodesetController {
 
     //.........
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+    public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.applicationCodesetService.delete(id));
     }
 }

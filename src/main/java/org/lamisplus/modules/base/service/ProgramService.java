@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ServiceDTO;
-import org.lamisplus.modules.base.domain.entities.Module;
-import org.lamisplus.modules.base.domain.entities.Program;
+import org.lamisplus.modules.base.domain.entity.Module;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.ServiceMapper;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
@@ -29,7 +29,7 @@ public class ProgramService {
         Optional<Module> moduleOptional = this.moduleRepository.findById(serviceDTO.getModuleId());
         if(!moduleOptional.isPresent()) throw new EntityNotFoundException(Module.class, "Module Id", serviceDTO.getModuleId() + "");
 
-        Optional<Program> serviceOptional = this.programRepository.findByProgramCode(serviceDTO.getProgramCode());
+        Optional<Program> serviceOptional = this.programRepository.findByCode(serviceDTO.getProgramCode());
         if(serviceOptional.isPresent()) throw new RecordExistException(Program.class, "Program Name", serviceDTO.getProgramCode() +"");
 
         final Program program = this.serviceMapper.toServiceDTO(serviceDTO);

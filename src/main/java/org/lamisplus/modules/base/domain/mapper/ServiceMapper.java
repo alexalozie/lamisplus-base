@@ -1,7 +1,7 @@
 package org.lamisplus.modules.base.domain.mapper;
 
 import org.lamisplus.modules.base.domain.dto.ServiceDTO;
-import org.lamisplus.modules.base.domain.entities.Program;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.mapstruct.Mapper;
 
 

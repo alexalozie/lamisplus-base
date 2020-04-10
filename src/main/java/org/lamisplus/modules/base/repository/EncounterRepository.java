@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.repository;
 
-import org.lamisplus.modules.base.domain.entities.Encounter;
-import org.springframework.data.domain.Page;
+import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -48,6 +47,12 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeAndVisitIdOrderByDateEncounterDesc(Long patientId, String ProgramCode,String FormCode, Long visitId);
 
     List<Encounter> findAllByPatientIdAndFormCode(Long patientId, String formCode);
+
+    @Query("select DISTINCT e from Encounter e where e.patientId=?1")
+    List<Encounter> findAllByPatientId(Long patientId);
+
+    List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
+
 
 
 }

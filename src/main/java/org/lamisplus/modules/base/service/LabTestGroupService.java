@@ -4,16 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.LabTestDTO;
-import org.lamisplus.modules.base.domain.entities.LabTest;
-import org.lamisplus.modules.base.domain.entities.LabTestGroup;
+import org.lamisplus.modules.base.domain.entity.LabTest;
+import org.lamisplus.modules.base.domain.entity.LabTestGroup;
 import org.lamisplus.modules.base.domain.mapper.LabTestMapper;
 import org.lamisplus.modules.base.repository.LabTestGroupRepository;
 import org.lamisplus.modules.base.repository.LabTestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

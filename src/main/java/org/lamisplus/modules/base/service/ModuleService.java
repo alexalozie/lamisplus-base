@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
-import org.lamisplus.modules.base.domain.entities.Module;
+import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.springframework.transaction.annotation.Transactional;

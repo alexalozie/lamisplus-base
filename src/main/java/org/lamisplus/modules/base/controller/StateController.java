@@ -2,14 +2,11 @@ package org.lamisplus.modules.base.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
-import org.lamisplus.modules.base.domain.entities.Country;
-import org.lamisplus.modules.base.domain.entities.Province;
-import org.lamisplus.modules.base.domain.entities.State;
+import org.lamisplus.modules.base.domain.entity.Province;
+import org.lamisplus.modules.base.domain.entity.State;
 import org.lamisplus.modules.base.repository.CountriesRepository;
 import org.lamisplus.modules.base.repository.StateRepository;
 import org.lamisplus.modules.base.service.StateService;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/state")
