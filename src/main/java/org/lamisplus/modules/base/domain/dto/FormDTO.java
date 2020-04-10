@@ -13,7 +13,7 @@ public class FormDTO {
 
     private String resourcePath;
 
-    private String serviceName;
+    private String programCode;
 
     private String version;
 

@@ -2,10 +2,9 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ClinicianPatientDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.entities.ClinicianPatient;
+import org.lamisplus.modules.base.domain.entity.ClinicianPatient;
 import org.lamisplus.modules.base.service.ClinicianPatientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

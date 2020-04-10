@@ -3,13 +3,8 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ProvinceDTO;
-import org.lamisplus.modules.base.domain.entities.Province;
-import org.lamisplus.modules.base.domain.entities.State;
-import org.lamisplus.modules.base.repository.ProvinceRepository;
-import org.lamisplus.modules.base.repository.StateRepository;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
+import org.lamisplus.modules.base.domain.entity.Province;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.service.ProvinceService;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/province")
+@RequestMapping("/api/provinces")
 @Slf4j
 @RequiredArgsConstructor
 public class ProvinceController {
@@ -31,35 +25,35 @@ public class ProvinceController {
     @PostMapping
     public ResponseEntity<Province> save(@RequestBody ProvinceDTO provinceDTO) throws URISyntaxException {
         Province province = provinceService.save(provinceDTO);
-            return ResponseEntity.created(new URI("/api/province/" + province.getId()))
-                    .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(province.getId()))).body(province);
+        return ResponseEntity.created(new URI("/api/provinces/" + province.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(province.getId()))).body(province);
     }
 
-    @PutMapping
-    public ResponseEntity<Province> update(@RequestBody ProvinceDTO provinceDTO) throws URISyntaxException {
-        Province province = provinceService.update(provinceDTO);
-        return ResponseEntity.created(new URI("/api/province/" + province.getId()))
+    @PutMapping("/{id}")
+    public ResponseEntity<Province> update(@PathVariable Long id, @RequestBody Province province1) throws URISyntaxException {
+        Province province = provinceService.update(id, province1);
+        return ResponseEntity.created(new URI("/api/provinces/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
+                .body(province);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Province> getProvince(@PathVariable Long id) throws URISyntaxException {
+        Province province = provinceService.getProvince(id);
+        return ResponseEntity.created(new URI("/api/provinces/" + province.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(province.getId())))
                 .body(province);
     }
 
+
     @GetMapping
-    public ResponseEntity<List<Province>> getAllProvince() {
-        return ResponseEntity.ok(provinceService.allProvince());
+    public ResponseEntity<List<Province>> getAllProvinces() {
+        return ResponseEntity.ok(provinceService.getAllProvinces());
     }
 
-   /* @DeleteMapping("/{id}")
-    public ResponseEntity<?> archiveProvince(@PathVariable Long id) {
-        Optional<Province> state = this.provinceRepository.findById(id);
-        if (state.isPresent()){
-            Province stateArchive = state.get();
-            stateArchive.setArchive(Boolean.TRUE);
-        } else throw new BadRequestAlertException("Record not found with id ", ENTITY_NAME, "id is  Null");
-        return ResponseEntity.ok().build();
-    }*/
 
-    @GetMapping("/{stateId}")
-    public ResponseEntity<List<Province>> getAllProvinceByStateId(@PathVariable Long stateId) {
-        return ResponseEntity.ok(provinceService.allProvinceBy(stateId));
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Long id, @RequestBody ProvinceDTO provinceDTO) throws RecordNotFoundException {
+        return this.provinceService.delete(id, provinceDTO);
     }
 }

@@ -3,7 +3,7 @@ package org.lamisplus.modules.base.domain.mapper;
 
 
 import org.lamisplus.modules.base.domain.dto.PersonRelativesDTO;
-import org.lamisplus.modules.base.domain.entities.PersonRelative;
+import org.lamisplus.modules.base.domain.entity.PersonRelative;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

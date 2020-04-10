@@ -4,7 +4,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
-import org.lamisplus.modules.base.domain.entities.Module;
+import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

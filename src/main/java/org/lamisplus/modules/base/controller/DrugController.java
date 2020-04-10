@@ -2,14 +2,14 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
-import org.lamisplus.modules.base.domain.entities.Drug;
+import org.lamisplus.modules.base.domain.dto.HeaderUtil;
+import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.service.DrugService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -19,11 +19,35 @@ import java.util.List;
 public class DrugController {
 
     private final DrugService drugService;
+    private static final String ENTITY_NAME = "Drug";
 
-    //DRUG GROUP.........
     @GetMapping
     public ResponseEntity<List<Drug>> getAllDrugs() {
-        return ResponseEntity.ok(this.drugService.getAllDrug());
+        return ResponseEntity.ok(this.drugService.getAllDrugs());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Drug> getDrug(@PathVariable Long id) {
+        return ResponseEntity.ok(drugService.getDrug(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<Drug> save(@RequestBody Drug drug) throws URISyntaxException {
+        Drug result = drugService.save(drug);
+        return ResponseEntity.created(new URI("/api/drugs/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Drug> update(@PathVariable Long id, @RequestBody Drug drug) throws URISyntaxException {
+        Drug result = drugService.update(id, drug);
+        return ResponseEntity.created(new URI("/api/drugs/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
+                .body(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Long id, @RequestBody Drug drug) throws RecordNotFoundException {
+        return this.drugService.delete(id, drug);
+    }
 }

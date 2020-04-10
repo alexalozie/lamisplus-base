@@ -24,6 +24,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.NoSuchElementException;
+
 import static org.springframework.http.HttpStatus.*;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -130,9 +132,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
      * @param ex the EntityNotFoundException
      * @return the ApiError object
      */
-    @ExceptionHandler(EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
-            EntityNotFoundException ex) {
+    @ExceptionHandler({EntityNotFoundException.class,NoSuchElementException.class, NullPointerException.class})
+    protected ResponseEntity<Object> handleNotFound(
+            Exception ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
         apiError.setStatusCode(NOT_FOUND.value());
         apiError.setMessage(ex.getMessage());

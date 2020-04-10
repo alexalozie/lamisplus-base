@@ -2,8 +2,8 @@ package org.lamisplus.modules.base.domain.mapper;
 
 
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
-import org.lamisplus.modules.base.domain.entities.Person;
-import org.lamisplus.modules.base.domain.entities.Visit;
+import org.lamisplus.modules.base.domain.entity.Person;
+import org.lamisplus.modules.base.domain.entity.Visit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

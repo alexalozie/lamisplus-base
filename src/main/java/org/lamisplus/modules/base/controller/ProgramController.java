@@ -4,8 +4,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ServiceDTO;
-import org.lamisplus.modules.base.domain.entities.Service;
-import org.lamisplus.modules.base.repository.ModuleRepository;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.service.ProgramService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +24,14 @@ public class ProgramController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Service> save(@RequestBody ServiceDTO serviceDTO) throws URISyntaxException {
-        Service service = this.programService.save(serviceDTO);
-        return ResponseEntity.created(new URI("/api/programs/" + service.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(service.getId()))).body(service);
+    public ResponseEntity<Program> save(@RequestBody ServiceDTO serviceDTO) throws URISyntaxException {
+        Program program = this.programService.save(serviceDTO);
+        return ResponseEntity.created(new URI("/api/programs/" + program.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(program.getId()))).body(program);
     }
 
     @GetMapping
-    public ResponseEntity<List<Service>> getServices(@RequestParam(required = false) Long moduleId) {
+    public ResponseEntity<List<Program>> getServices(@RequestParam(required = false) Long moduleId) {
         if(moduleId == null || moduleId == 0) {
             return ResponseEntity.ok(this.programService.getServiceByModuleId(moduleId));
         }else {

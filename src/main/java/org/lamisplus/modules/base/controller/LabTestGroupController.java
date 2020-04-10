@@ -2,31 +2,60 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.domain.dto.BadRequestAlertException;
-import org.lamisplus.modules.base.domain.dto.LabTestDTO;
-import org.lamisplus.modules.base.domain.entities.LabTest;
-import org.lamisplus.modules.base.domain.entities.LabTestGroup;
-import org.lamisplus.modules.base.repository.LabTestGroupRepository;
-import org.lamisplus.modules.base.repository.LabTestRepository;
-import org.lamisplus.modules.base.service.LabService;
+import org.lamisplus.modules.base.domain.dto.HeaderUtil;
+import org.lamisplus.modules.base.domain.entity.LabTest;
+import org.lamisplus.modules.base.domain.entity.LabTestGroup;
+import org.lamisplus.modules.base.service.LabTestService;
+import org.lamisplus.modules.base.service.LabTestGroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/labTestGroup")
+@RequestMapping("/api/lab-test-groups")
 @Slf4j
 @RequiredArgsConstructor
 public class LabTestGroupController {
-    private final LabService labService;
+    private final LabTestService labTestService;
+    private final LabTestGroupService labTestGroupService;
+    private final String ENTITY_NAME = "LabTestGroup";
 
     //LAB TEST GROUP.........
     @GetMapping
-    public ResponseEntity<List<LabTestGroup>> getAllLabTestGroup() {
-        return ResponseEntity.ok(this.labService.getAllLabTestGroup());
+    public ResponseEntity<List<LabTestGroup>> getAllLabTestGroups() {
+        return ResponseEntity.ok(this.labTestGroupService.getAllLabTestGroups());
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<LabTestGroup> getLabTestGroup(@PathVariable Long id) {
+        return ResponseEntity.ok(labTestGroupService.getLabTestGroup(id));
+    }
+
+    @GetMapping("/{id}/lab-tests")
+    public ResponseEntity<List<LabTest>> getLabTestsByLabTestGroupId(@PathVariable Long id) {
+        return ResponseEntity.ok(labTestGroupService.getLabTestsByLabTestGroupId(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<LabTestGroup> save(@RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
+        LabTestGroup result = labTestGroupService.save(labTestGroup);
+        return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LabTestGroup> update(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
+        LabTestGroup result = labTestGroupService.update(id, labTestGroup);
+        return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
+                .body(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) {
+        return this.labTestGroupService.delete(id, labTestGroup);
+    }
+
 }
