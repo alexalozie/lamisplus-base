@@ -42,14 +42,14 @@ public class ApplicationCodesetController {
     @PostMapping
     public ResponseEntity<ApplicationCodeset> save(@RequestBody ApplicationCodesetDTO applicationCodesetDTO) throws URISyntaxException {
         ApplicationCodeset applicationCodeset = applicationCodesetService.save(applicationCodesetDTO);
-        return ResponseEntity.created(new URI("/api/encounter/" + applicationCodeset.getId()))
+        return ResponseEntity.created(new URI("/api/application-codesets/" + applicationCodeset.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(applicationCodeset.getId()))).body(applicationCodeset);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApplicationCodeset> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) throws URISyntaxException {
         ApplicationCodeset applicationCodeset = applicationCodesetService.update(id, applicationCodesetDTO);
-        return ResponseEntity.created(new URI("/api/encounter/" + applicationCodeset.getId()))
+        return ResponseEntity.created(new URI("/api/application-codesets/" + applicationCodeset.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(applicationCodeset.getId()))).body(applicationCodeset);
     }
 

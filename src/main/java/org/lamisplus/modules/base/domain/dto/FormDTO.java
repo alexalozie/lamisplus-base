@@ -9,6 +9,8 @@ public class FormDTO {
 
     private String name;
 
+    private String code;
+
     private Object resourceObject;
 
     private String resourcePath;

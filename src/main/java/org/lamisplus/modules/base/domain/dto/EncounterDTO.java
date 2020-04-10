@@ -23,9 +23,6 @@ public class EncounterDTO implements Serializable {
     @JsonIgnore
     private Long programId;
 
-    private Long formDataId;
-
-
     private String formCode;
     private String programCode;
 
@@ -48,5 +45,6 @@ public class EncounterDTO implements Serializable {
     private String hospitalNumber;
     private String name;
 
+    @JsonIgnore
     private List<Object> data;
 }

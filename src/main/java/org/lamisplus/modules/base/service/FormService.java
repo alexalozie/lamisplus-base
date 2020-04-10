@@ -25,17 +25,10 @@ public class FormService {
     private final ProgramRepository programRepository;
     private final FormMapper formMapper;
 
-    public List<FormDTO> getAllForm() {
+    public List<Form> getAllForms() {
         List<Form> forms = this.formRepository.findAll();
 
-        List<FormDTO> formDTOList = new ArrayList();
-        forms.forEach(oneForm -> {
-            if(oneForm.getProgramCode().equals("GENERAL_SERVICE")) return;
-
-            FormDTO formDTO = formMapper.toForm(oneForm);
-            formDTOList.add(formDTO);
-        });
-        return formDTOList;
+        return forms;
     }
 
     public List<FormDTO> getFormByServiceCode(String serviceCode) {
