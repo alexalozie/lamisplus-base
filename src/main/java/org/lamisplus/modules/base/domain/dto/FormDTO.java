@@ -18,6 +18,4 @@ public class FormDTO {
     private String programCode;
 
     private String version;
-
-    private String displayName;
 }
