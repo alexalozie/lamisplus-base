@@ -37,11 +37,11 @@ public class Encounter extends JsonBEntity implements Serializable {
     private Long visitId;
 
     @Basic
-    @Column(name = "form_name", nullable = false, length = -1)
+    @Column(name = "form_name", nullable = false)
     private String formName;
 
     @Basic
-    @Column(name = "service_name", nullable = false, length = -1)
+    @Column(name = "service_name", nullable = false)
     private String serviceName;
 
     @Basic
