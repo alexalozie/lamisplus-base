@@ -16,7 +16,8 @@ public class FormData extends JsonBEntity implements Serializable {
     private Encounter encounterByEncounterId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
