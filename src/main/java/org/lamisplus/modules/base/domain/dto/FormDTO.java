@@ -4,10 +4,12 @@ import lombok.Data;
 
 @Data
 public class FormDTO {
-
+    
     private Long id;
 
     private String name;
+
+    private String code;
 
     private Object resourceObject;
 
@@ -15,7 +17,5 @@ public class FormDTO {
 
     private String programCode;
 
-    private String version;
-
-    private String displayName;
+    private Double version;
 }

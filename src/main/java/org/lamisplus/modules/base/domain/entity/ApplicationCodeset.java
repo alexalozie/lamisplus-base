@@ -1,8 +1,10 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -42,6 +44,8 @@ public class ApplicationCodeset {
 
     @Basic
     @Column(name = "date_created")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Timestamp dateCreated;
 
     @Basic
@@ -50,6 +54,8 @@ public class ApplicationCodeset {
 
     @Basic
     @Column(name = "date_modified")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Timestamp dateModified;
 
     @Basic

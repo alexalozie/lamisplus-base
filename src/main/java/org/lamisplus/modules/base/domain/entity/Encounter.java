@@ -18,24 +18,21 @@ import java.util.List;
 
 @Data
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode
-public class Encounter extends JsonBEntity implements Serializable {
+public class Encounter implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-/*    @Type(type = "jsonb")
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "form_data", nullable = false, columnDefinition = "jsonb")
-    private Object formData;*/
+
     @Basic
     @Column(name = "patient_id", nullable = false)
     private Long patientId;
     @Basic
     @Column(name = "visit_id", nullable = false)
     private Long visitId;
+
     @Basic
     @Column(name = "form_code", nullable = false)
     private String formCode;
@@ -73,6 +70,7 @@ public class Encounter extends JsonBEntity implements Serializable {
 
 
     @OneToMany(mappedBy = "encounterByEncounterId")
+    @JsonIgnore
     private List<FormData> formData = new ArrayList<FormData>();
 
     }

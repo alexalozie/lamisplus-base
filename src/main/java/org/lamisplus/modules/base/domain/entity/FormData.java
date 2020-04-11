@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "form_data", schema = "public", catalog = "lamisplus")
 public class FormData extends JsonBEntity implements Serializable {
     private Long id;
     private Object data;
@@ -16,7 +15,8 @@ public class FormData extends JsonBEntity implements Serializable {
     private Encounter encounterByEncounterId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }

@@ -20,7 +20,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);
 
-    List<Encounter> findBypatientId(Long PatientId);
+    List<Encounter> findByPatientId(Long PatientId);
 
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
@@ -44,7 +44,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
             "and e.dateEncounter >= ?4 and e.dateEncounter <= ?5 order by ?6, LIMIT = ?7")*/
     List <Encounter> findAllByPatientIdAndProgramCodeAndFormCode(Long patientId, String ProgramCode, String FormCode, Pageable pageable);
 
-    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeAndVisitIdOrderByDateEncounterDesc(Long patientId, String ProgramCode,String FormCode, Long visitId);
+    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeAndVisitIdOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode, Long visitId);
 
     List<Encounter> findAllByPatientIdAndFormCode(Long patientId, String formCode);
 

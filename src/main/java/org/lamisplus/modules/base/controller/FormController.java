@@ -26,12 +26,9 @@ public class FormController {
     private final String ENTITY_NAME = "Form";
 
     @GetMapping
-    public ResponseEntity<List<FormDTO>> getForms(@RequestParam(required = false) String serviceCode) {
-        if(serviceCode == null || serviceCode.equals("")){
-            return ResponseEntity.ok(this.formService.getAllForm());
-        } else {
-            return ResponseEntity.ok(this.formService.getFormByServiceCode(serviceCode));
-        }
+    public ResponseEntity<List<Form>> getAllForms() {
+            return ResponseEntity.ok(this.formService.getAllForms());
+
     }
     @GetMapping ("/{formId}/{programCode}")
     public ResponseEntity<FormDTO> getFormByFormIdAndProgramCode(@PathVariable Long formId, @PathVariable String programCode) {

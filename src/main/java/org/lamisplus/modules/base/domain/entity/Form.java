@@ -43,7 +43,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "version")
-    private String version;
+    private Double version;
 
     @Basic
     @Column(name = "name")
@@ -57,6 +57,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
+    @JsonIgnore
     public Program formByProgramCode;
 
 

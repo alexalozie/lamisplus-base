@@ -37,7 +37,7 @@ public class Drug {
 
     @Basic
     @Column(name = "abbrev")
-    private String abbrev;
+    private String name;
 
     @Basic
     @Column(name = "drug_group_id")

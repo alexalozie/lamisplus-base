@@ -10,6 +10,7 @@ import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.util.converter.UuidGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -25,17 +26,10 @@ public class FormService {
     private final ProgramRepository programRepository;
     private final FormMapper formMapper;
 
-    public List<FormDTO> getAllForm() {
+    public List<Form> getAllForms() {
         List<Form> forms = this.formRepository.findAll();
 
-        List<FormDTO> formDTOList = new ArrayList();
-        forms.forEach(oneForm -> {
-            if(oneForm.getProgramCode().equals("GENERAL_SERVICE")) return;
-
-            FormDTO formDTO = formMapper.toForm(oneForm);
-            formDTOList.add(formDTO);
-        });
-        return formDTOList;
+        return forms;
     }
 
     public List<FormDTO> getFormByServiceCode(String serviceCode) {
@@ -61,6 +55,7 @@ public class FormService {
         if(formOptional.isPresent()) throw new RecordExistException(Form.class, "Form Name", formDTO.getName());
 
         final Form form = this.formMapper.toFormDTO(formDTO);
+        form.setCode(UuidGenerator.getUuid());
         log.info("Form - " + form);
         return this.formRepository.save(form);
     }
