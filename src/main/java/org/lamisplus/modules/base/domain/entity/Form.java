@@ -43,7 +43,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "version")
-    private String version;
+    private Double version;
 
     @Basic
     @Column(name = "name")

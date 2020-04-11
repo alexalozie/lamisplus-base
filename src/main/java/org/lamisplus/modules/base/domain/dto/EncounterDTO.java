@@ -24,6 +24,7 @@ public class EncounterDTO implements Serializable {
     private Long programId;
 
     private String formCode;
+
     private String programCode;
 
     @Convert(converter = LocalDateConverter.class)

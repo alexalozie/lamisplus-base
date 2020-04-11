@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "form_data", schema = "public", catalog = "lamisplus")
 public class FormData extends JsonBEntity implements Serializable {
     private Long id;
     private Object data;

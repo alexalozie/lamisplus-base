@@ -215,7 +215,7 @@ public class PatientService {
     }
 
     public List getAllEncountersByPatientId(Long patientId) {
-        List<Encounter> encounters = encounterRepository.findBypatientId(patientId);
+        List<Encounter> encounters = encounterRepository.findByPatientId(patientId);
 
         return listEncounterProcessor(encounters);
     }
