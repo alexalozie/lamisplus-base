@@ -27,7 +27,7 @@ public class ClinicianPatientController {
     @PostMapping
     public ResponseEntity<ClinicianPatient> assignClinician(@RequestBody ClinicianPatientDTO clinicianPatientDTO) throws URISyntaxException {
         ClinicianPatient clinicianPatient1 = clinicianPatientService.assignClinician(clinicianPatientDTO);
-        return ResponseEntity.created(new URI("/api/assignPatient" + clinicianPatient1.getId()))
+        return ResponseEntity.created(new URI("/api/assignPatients" + clinicianPatient1.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(clinicianPatient1.getId()))).body(clinicianPatient1);
     }
 }

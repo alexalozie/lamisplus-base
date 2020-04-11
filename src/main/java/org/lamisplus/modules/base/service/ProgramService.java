@@ -45,7 +45,7 @@ public class ProgramService {
 
     }
 
-    public List<Program> getAllService(){
+    public List<Program> getAllPrograms(){
         List<Program> programList = this.programRepository.findAll();
         return programList;
     }

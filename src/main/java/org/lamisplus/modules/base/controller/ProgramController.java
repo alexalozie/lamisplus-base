@@ -31,11 +31,8 @@ public class ProgramController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Program>> getServices(@RequestParam(required = false) Long moduleId) {
-        if(moduleId == null || moduleId == 0) {
-            return ResponseEntity.ok(this.programService.getServiceByModuleId(moduleId));
-        }else {
-            return ResponseEntity.ok(this.programService.getAllService());
-        }
+    public ResponseEntity<List<Program>> getAllPrograms() {
+            return ResponseEntity.ok(this.programService.getAllPrograms());
+
     }
 }
