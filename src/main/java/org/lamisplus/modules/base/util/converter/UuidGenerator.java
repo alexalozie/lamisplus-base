@@ -7,7 +7,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
-@Slf4j
 public class UuidGenerator {
     public static String getUuid(){
         UUID uuid = UUID.randomUUID();
