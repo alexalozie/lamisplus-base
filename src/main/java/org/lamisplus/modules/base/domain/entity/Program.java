@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,4 +42,6 @@ public class Program implements Serializable {
 */
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public Module moduleByModuleId;}
+    @JsonIgnore
+    public Module moduleByModuleId;
+}

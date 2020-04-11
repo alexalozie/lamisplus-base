@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -52,12 +53,6 @@ public class Module {
     @Basic
     @Column(name = "version", nullable = true, length = 255)
     private String version;
-    /*
-    private Collection<ModuleDependencies> moduleDependenciesById;
-    private Collection<ModuleDependencies> moduleDependenciesById_0;
-
-     */
-
 
 /*
     @OneToMany(mappedBy = "moduleByDependencyId")
@@ -79,7 +74,7 @@ public class Module {
     }
 
  */
-   /* @OneToMany(mappedBy = "moduleByModuleId")
-    private Collection<Program> programsById;
-*/
+    @OneToMany(mappedBy = "moduleByModuleId")
+    @JsonIgnore
+    private Collection<Program> moduleByModuleId;
 }
