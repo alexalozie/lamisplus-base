@@ -47,4 +47,5 @@ public class EncounterDTO implements Serializable {
     private String formName;
 
     private List<Object> data;
+    private List<Object> formDataObj;
 }

@@ -87,7 +87,7 @@ public class Form extends JsonBEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
-    public Program formByProgramCode;
+    private Program programByProgramCode;
 
 
 }

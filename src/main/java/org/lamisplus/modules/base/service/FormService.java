@@ -6,6 +6,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.util.UuidGenerator;
@@ -28,10 +29,9 @@ public class FormService {
     }
 
 
-    public FormDTO getFormByFormIdAndProgramCode(Long Id, String serviceCode) {
-        Optional<Form> formOptional= this.formRepository.findByIdAndProgramCode(Id, serviceCode);
-        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Program Code", serviceCode);
-
+    public FormDTO getFormByFormIdAndProgramCode(Long Id, String programCode) {
+        Optional<Form> formOptional= this.formRepository.findByIdAndProgramCode(Id, programCode);
+        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Program Code", programCode);
         FormDTO formDTO = formMapper.toForm(formOptional.get());
         log.info("FormDTO - " + formDTO);
         return formDTO;
@@ -71,8 +71,18 @@ public class FormService {
         return formRepository.save(form);
     }
 
-    public Boolean delete(Long id, Form form) {
+    public Boolean delete(Long id) {
+        Optional<Form> formOptional = formRepository.findById(id);
+        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class,"Display:",id+"");
+        formOptional.get().setArchived(1);
         return true;
+    }
+
+    public Program programByProgramCode(Long id) {
+        Optional<Form> formOptional = formRepository.findById(id);
+        if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
+        Program program = formOptional.get().getProgramByProgramCode();
+        return program;
     }
 
 }

@@ -60,5 +60,10 @@ public class FormController {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(form1);
     }
 
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable Long id) {
+        return this.formService.delete(id);
+    }
+
 
 }

@@ -47,7 +47,7 @@ public class DrugController {
     }
 
     @DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Long id, @RequestBody Drug drug) throws RecordNotFoundException {
-        return this.drugService.delete(id, drug);
+    public Boolean delete(@PathVariable Long id) throws RecordNotFoundException {
+        return this.drugService.delete(id);
     }
 }

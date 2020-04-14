@@ -68,7 +68,7 @@ public class EncounterController {
     }
 
     @DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Long id, @RequestBody Encounter encounter) {
-        return this.encounterService.delete(id, encounter);
+    public Boolean delete(@PathVariable Long id) {
+        return this.encounterService.delete(id);
     }
 }

@@ -36,7 +36,7 @@ public class Program implements Serializable {
     private Collection<Encounter> programByProgramCode;
 */
 
-   @OneToMany(mappedBy = "formByProgramCode")
+   @OneToMany(mappedBy = "programByProgramCode")
    @JsonIgnore
    private Collection<Form> formByProgramCode;
 

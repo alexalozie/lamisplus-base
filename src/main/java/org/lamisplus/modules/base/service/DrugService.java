@@ -47,7 +47,10 @@ public class DrugService {
         return drugRepository.save(drug);
     }
 
-    public Boolean delete(Long id, Drug drug) {
+    public Boolean delete(Long id) {
+        Optional<Drug> drugOptional = drugRepository.findById(id);
+        if(!drugOptional.isPresent()) throw new EntityNotFoundException(Drug.class,"Display:",id+"");
+        drugOptional.get().setArchived(1);
         return true;
     }
 

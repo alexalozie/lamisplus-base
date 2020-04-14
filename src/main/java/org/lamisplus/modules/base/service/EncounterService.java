@@ -62,11 +62,15 @@ public class EncounterService {
         Patient patient = encounterOptional.get().getPatientByPatientId();
         Person person = patient.getPersonByPersonId();
         Form form = encounterOptional.get().getEncounterByFormCode();
+        List formDataList = new ArrayList();
 
         final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounterOptional.get(), form);
+        encounterOptional.get().getFormData().forEach(formData -> {
+            formDataList.add(formData);
+        });
+        encounterDTO.setFormDataObj(formDataList);
 
         log.info("GETTING encounter in List 12... " + encounterDTO);
-
         return encounterDTO;
     }
 
@@ -132,14 +136,15 @@ public class EncounterService {
                 formData.setData(formDataList);
                 this.formDataRepository.save(formData);
             });
-
         }
-
         return encounter2;
 
     }
 
-    public Boolean delete(Long id, Encounter encounter) {
+    public Boolean delete(Long id) {
+        Optional<Encounter> encounterOptional = encounterRepository.findById(id);
+        if(!encounterOptional.isPresent()) throw new EntityNotFoundException(Encounter.class,"Display:",id+"");
+        encounterOptional.get().setArchived(1);
         return true;
     }
 

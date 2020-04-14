@@ -40,11 +40,11 @@ public class ApplicationCodesetService {
 
     public List<ApplicationCodeset> getApplicationCodeByCodesetGroup(String codeSetGroup){
         List<ApplicationCodeset> applicationCodesetList = appCodesetRepo.findAllByCodesetGroupOrderByIdAsc(codeSetGroup);
-        List<ApplicationCodesetDTO> applicationCodesetDTOList = new ArrayList<>();
+        /*List<ApplicationCodesetDTO> applicationCodesetDTOList = new ArrayList<>();
         applicationCodesetList.forEach(applicationCodeset -> {
             final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
             applicationCodesetDTOList.add(applicationCodesetDTO);
-        });
+        });*/
         return applicationCodesetList;
     }
 
