@@ -100,9 +100,7 @@ public class PatientService {
         patients.forEach(patient -> {
             log.info("PATIENT  IS ..." + patient);
             Person person = patient.getPersonByPersonId();
-            //log.info("PERSON  IS ..." + person);
             PersonContact personContact = personContactRepository.findByPersonId(person.getId()).get();
-            //log.info("PERSON CONTACT  IS ..." + personContact);
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
 
             PatientDTO patientDTO = null;
@@ -152,7 +150,6 @@ public class PatientService {
 
 
     public Person update(Long id, PatientDTO patientDTO) {
-        //Creating a patient object
         Optional<Patient> patient1 = this.patientRepository.findById(id);
         if (!patient1.isPresent()) notExit(Patient.class, "Id", id+"");
 
@@ -195,14 +192,13 @@ public class PatientService {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if(dateStart.isPresent()){
-                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
+                if(dateStart.isPresent()&& !dateStart.get().equals("{dateStart}")){
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateEncounter", dateStart, "greaterThanOrEqualTo"));
                 }
 
-                if(dateEnd.isPresent()){
-                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
+                if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateEncounter", dateEnd,"lessThanOrEqualTo"));
+
                 }
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId"), patientId)));
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
@@ -213,6 +209,9 @@ public class PatientService {
 
         return listEncounterProcessor(encounters);
     }
+
+
+
 
     public List getAllEncountersByPatientId(Long patientId) {
         List<Encounter> encounters = encounterRepository.findByPatientId(patientId);
@@ -234,11 +233,11 @@ public class PatientService {
 
         Person person = patient.getPersonByPersonId();
 
-        Program program = encounter.getProgramByProgramCode();
+        Form form = encounter.getEncounterByFormCode();
 
         //List<FormData> formData = encounter.getFormData();
 
-        final EncounterDTO encounterDTO1 = encounterMapper.toEncounterDTO(person, patient, encounter, program);
+        final EncounterDTO encounterDTO1 = encounterMapper.toEncounterDTO(person, patient, encounter, form);
 
         log.info("GETTING encounter Latest 12... " + encounterDTO1);
         //issues may come up with wrong form name
@@ -247,7 +246,7 @@ public class PatientService {
 
 
 
-    public List getEncountersByPatientId(Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
+    public List getEncountersByPatientIdAndFormCode(Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
         Pageable pageableSorter = createPageRequest(sortField, sortOrder, limit);
         List<Encounter> encountersList = encounterRepository.findAllByPatientIdAndFormCode(patientId,formCode,pageableSorter);
         return listEncounterProcessor(encountersList);
@@ -273,9 +272,9 @@ public class PatientService {
                     if(singleEncounter.getProgramCode().equals(programCode))return;
                     Patient patient = singleEncounter.getPatientByPatientId();
                     Person person = patient.getPersonByPersonId();
-                    Program program = singleEncounter.getProgramByProgramCode();
+                    Form form = singleEncounter.getEncounterByFormCode();
 
-                    final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, program);
+                    final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
                     encounterDTOS.add(encounterDTO);
                 });
             });
@@ -283,10 +282,6 @@ public class PatientService {
 
         }
 
-    public List<EncounterDTO> testing(Long PatientId, String formCode) {
-        List<Encounter> encounters = this.encounterRepository.findAllByPatientIdAndFormCode(PatientId, formCode);
-        return listEncounterProcessor(encounters);
-    }
 
     public Boolean delete(Long id, Patient patient) {
         return true;
@@ -300,13 +295,11 @@ public class PatientService {
                 if (patientId.isPresent()) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId").as(Long.class), patientId.get())));
                 }
-                if (dateStart.isPresent()) {
-                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateVisitStart").as(LocalDate.class), localDate)));
+                if (dateStart.isPresent() && !dateStart.get().equals("{dateStart}")) {
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateVisitStart", dateStart, "greaterThanOrEqualTo"));
                 }
-                if (dateEnd.isPresent()) {
-                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitStart").as(LocalDate.class), localDate)));
+                if (dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")) {
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateVisitStart", dateEnd, "lessThanOrEqualTo"));
                 }
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateVisitStart")));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -353,6 +346,15 @@ public class PatientService {
             });
         });
         return formDataList;
+    }
+
+    private Predicate getPredicate(Root root, CriteriaBuilder criteriaBuilder,String entityField, Optional<String> date,String operation){
+        LocalDate localDate = LocalDate.parse(date.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if(operation.equals("greaterThanOrEqualTo")) {
+            return criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get(entityField).as(LocalDate.class), localDate));
+        }else {
+            return criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get(entityField).as(LocalDate.class), localDate));
+        }
     }
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes

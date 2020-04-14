@@ -11,11 +11,13 @@ public class FormDTO {
 
     private String code;
 
+    private Integer usageCode;
+
     private Object resourceObject;
 
     private String resourcePath;
 
     private String programCode;
 
-    private Double version;
+    private String version;
 }

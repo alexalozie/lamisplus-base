@@ -3,7 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.dto.ServiceDTO;
+import org.lamisplus.modules.base.domain.dto.ProgramDTO;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.service.ProgramService;
 import org.springframework.http.HttpStatus;
@@ -24,8 +24,8 @@ public class ProgramController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Program> save(@RequestBody ServiceDTO serviceDTO) throws URISyntaxException {
-        Program program = this.programService.save(serviceDTO);
+    public ResponseEntity<Program> save(@RequestBody ProgramDTO programDTO) throws URISyntaxException {
+        Program program = this.programService.save(programDTO);
         return ResponseEntity.created(new URI("/api/programs/" + program.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(program.getId()))).body(program);
     }

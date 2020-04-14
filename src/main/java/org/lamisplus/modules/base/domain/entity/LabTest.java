@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 
 @Data
@@ -18,20 +19,50 @@ public class LabTest {
     private Long id;
 
     @Basic
-    @Column(name = "lab_test_group_id", nullable = true)
+    @Column(name = "lab_test_group_id")
     private Long labTestGroupId;
 
     @Basic
-    @Column(name = "description", nullable = true, length = -1)
-    private String description;
+    @Column(name = "name")
+    private String name;
 
     @Basic
-    @Column(name = "unit_measurement", nullable = true, length = -1)
+    @Column(name = "unit_measurement")
     private String unitMeasurement;
+
+    @Basic
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    @JsonIgnore
+    private Integer archived;
 
     @ManyToOne
     @JoinColumn(name = "lab_test_group_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private LabTestGroup labTestGroupByLabTestCategoryId;
+    private LabTestGroup labTestGroupByLabTestGroupId;
 
 }

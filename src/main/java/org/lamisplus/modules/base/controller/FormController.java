@@ -30,16 +30,34 @@ public class FormController {
             return ResponseEntity.ok(this.formService.getAllForms());
 
     }
-    @GetMapping ("/{formId}/{programCode}")
-    public ResponseEntity<FormDTO> getFormByFormIdAndProgramCode(@PathVariable Long formId, @PathVariable String programCode) {
-            return ResponseEntity.ok(this.formService.getFormByFormIdAndProgramCode(formId, programCode));
+    @GetMapping ("/{formCode}/formCode")
+    public ResponseEntity<Form> getFormsByFormCode(@PathVariable String formCode) {
+            return ResponseEntity.ok(this.formService.getFormsByFormCode(formCode));
     }
+
+    @GetMapping ("/{id}")
+    public ResponseEntity<Form> getFormsByFormCode(@PathVariable Long id) {
+        return ResponseEntity.ok(this.formService.getForm(id));
+    }
+
+    @GetMapping ("/{usageCode}/usageCode")
+    public ResponseEntity<List> getFormsByUsageStatus(@PathVariable Integer usageCode) {
+        return ResponseEntity.ok(this.formService.getFormsByUsageStatus(usageCode));
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Form> save(@RequestBody FormDTO formDTO) throws URISyntaxException {
-        Form form = this.formService.save(formDTO);
-        return ResponseEntity.created(new URI("/api/forms/" + form.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(form.getId()))).body(form);
+        Form form2 = this.formService.save(formDTO);
+        return ResponseEntity.created(new URI("/api/forms/" + form2.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(form2.getId()))).body(form2);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Form> update(@PathVariable Long id, @RequestBody FormDTO formDTO) throws URISyntaxException {
+        Form form1 = this.formService.update(id, formDTO);
+        return ResponseEntity.created(new URI("/api/forms/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(form1);
     }
 
 

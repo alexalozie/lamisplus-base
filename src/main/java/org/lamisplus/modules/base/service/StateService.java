@@ -43,7 +43,9 @@ public class StateService {
     }
 
     public List<Province> getProvincesByStateId(Long stateId) {
-        List<Province> provinceList = this.provinceRepository.findAllByStateId(stateId);
+        State state = stateRepository.getOne(stateId);
+        List<Province> provinceList = state.getProvincesById();
+        //List<Province> provinceList = this.provinceRepository.findAllByStateId(stateId);
         return provinceList;
     }
 

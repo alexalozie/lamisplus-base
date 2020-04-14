@@ -24,10 +24,6 @@ public class Menu {
     @Column(name = "module_name")
     private String moduleName;
 
-    /*@Basic
-    @Column(name = "display_name")
-    private String displayName;
-*/
     @Basic
     @Column(name = "description")
     private String description;

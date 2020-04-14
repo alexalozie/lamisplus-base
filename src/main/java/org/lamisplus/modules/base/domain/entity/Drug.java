@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -36,12 +37,42 @@ public class Drug {
     private String dosageForm;
 
     @Basic
-    @Column(name = "abbrev")
+    @Column(name = "code")
     private String name;
 
     @Basic
     @Column(name = "drug_group_id")
     public Long drugGroupId;
+
+    @Basic
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    @JsonIgnore
+    private Integer archived;
 
     @ManyToOne
     @JoinColumn(name = "drug_group_id", referencedColumnName = "id", updatable = false, insertable = false)

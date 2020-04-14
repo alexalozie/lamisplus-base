@@ -46,20 +46,24 @@ public class ApplicationCodeset {
     @Column(name = "date_created")
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonIgnore
     private Timestamp dateCreated;
 
     @Basic
     @Column(name = "created_by")
+    @JsonIgnore
     private String createdBy;
 
     @Basic
     @Column(name = "date_modified")
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonIgnore
     private Timestamp dateModified;
 
     @Basic
     @Column(name = "modified_by")
+    @JsonIgnore
     private String modifiedBy;
 
     @Basic

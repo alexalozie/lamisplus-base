@@ -32,16 +32,6 @@ public class ClinicianPatient {
     @NotNull(message = "Clinician Id not available")
     private Long clinicianId;
 
-    @Basic
-    @Column(name = "app_codeset_id")
-    @NotNull(message = "Codeset Id not available")
-    private Long applicationCodesetId;
-
-    @JoinColumn(name = "app_codeset_id", insertable = false, updatable = false)
-    @ManyToOne
-    @JsonIgnore
-    private ApplicationCodeset applicationCodeset;
-
     @JoinColumn(name = "visit_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore

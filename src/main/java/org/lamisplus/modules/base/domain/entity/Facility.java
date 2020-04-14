@@ -1,15 +1,16 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "facility", schema = "public", catalog = "lamisplus")
 @EqualsAndHashCode
 public class Facility {
     @Id
@@ -66,6 +67,35 @@ public class Facility {
     @Column(name = "start_date")
     @NotNull
     private Date startDate;
+
+    @Basic
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    @JsonIgnore
+    private Integer archived;
     //private Collection<FacilityService> facilityServicesById;
     //private Collection<Patient> patientsById;
 

@@ -46,8 +46,8 @@ public class EncounterService {
         allEncounter.forEach(singleEncounter -> {
             Patient patient = singleEncounter.getPatientByPatientId();
             Person person = patient.getPersonByPersonId();
-            Program program = singleEncounter.getProgramByProgramCode();
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, program);
+            Form form = singleEncounter.getEncounterByFormCode();
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
 
             log.info("GETTING encounter in List 12... " + encounterDTO);
 
@@ -61,9 +61,9 @@ public class EncounterService {
         Optional<Encounter> encounterOptional = encounterRepository.findById(id);
         Patient patient = encounterOptional.get().getPatientByPatientId();
         Person person = patient.getPersonByPersonId();
-        Program program = encounterOptional.get().getProgramByProgramCode();
+        Form form = encounterOptional.get().getEncounterByFormCode();
 
-        final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounterOptional.get(), program);
+        final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounterOptional.get(), form);
 
         log.info("GETTING encounter in List 12... " + encounterDTO);
 
@@ -144,16 +144,17 @@ public class EncounterService {
     }
 
     public List<EncounterDTO> getEncounterByFormCodeAndDate(String FormCode, Optional<String> dateStart, Optional<String> dateEnd) {
+
         List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if(dateStart.isPresent()){
+                if(dateStart.isPresent() && !dateStart.get().equals("{dateStart}")){
                     LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
                 }
 
-                if(dateEnd.isPresent()){
+                if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
                     LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
                 }
@@ -169,15 +170,35 @@ public class EncounterService {
         encounters.forEach(singleEncounter -> {
             Patient patient = singleEncounter.getPatientByPatientId();
             Person person = patient.getPersonByPersonId();
-            Program program = singleEncounter.getProgramByProgramCode();
+            Form form = singleEncounter.getEncounterByFormCode();
 
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, program);
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
             log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
 
             encounterDTOS.add(encounterDTO);
 
         });
         return encounterDTOS;
-
     }
+
+    public List getFormDataByEncounterId(Long encounterId) {
+        Encounter encounter = encounterRepository.getOne(encounterId);
+        List<FormData> formDataList = encounter.getFormData();
+        return formDataList;
+    }
+
+    /*public List getFormDataByEncounterFormCode(Long id) {
+        Optional<Encounter> encounterOptional = encounterRepository.findById(id);
+        List<FormData> formDataList = encounterOptional.get().getFormData();
+        List data = new ArrayList();
+
+        encounters.forEach(encounter -> {
+            List<FormData> formDataList = encounter.getFormData();
+            formDataList.forEach(formData -> {
+                data.add(formData.getData());
+            });
+
+        });
+        return data;
+    }*/
 }

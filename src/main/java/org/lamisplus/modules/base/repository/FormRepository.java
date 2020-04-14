@@ -13,6 +13,8 @@ public interface FormRepository extends JpaRepository<Form, Long> {
     List<Form> findAll();
 
     List<Form> findByProgramCode(String programCode);
-    Optional<Form> findByIdAndProgramCode(Long Formid, String programCode);
+    Optional<Form> findByIdAndProgramCode(Long formId, String programCode);
+
+    List<Form> findAllByUsageCode(Integer usageCode);
 }
 

@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
@@ -58,10 +59,10 @@ public class PatientController {
     }
 */
     @GetMapping("/{id}/encounters/{formCode}")
-    public ResponseEntity<List> getEncountersByPatientId(@PathVariable Long id,
+    public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
                                                                        @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                        @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit) throws URISyntaxException {
-        return ResponseEntity.ok(this.patientService.getEncountersByPatientId(id, formCode, sortField, sortOrder, limit));
+        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(id, formCode, sortField, sortOrder, limit));
     }
     @GetMapping("/{id}/encounters/programCodeExclusionList")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) throws URISyntaxException {
@@ -71,19 +72,19 @@ public class PatientController {
 
     @ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - /api/patient/20/visits?dateStart=02-03-2020")
-    @GetMapping("/{id}/visits")
-    public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @RequestParam(required = false) Optional<String> dateStart,
-                                                                          @RequestParam(required = false) Optional <String> dateEnd) {
+    @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
+    public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
+                                                                          @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
     //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION all patients)
     @ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
-    @GetMapping("/{id}/encounters/{formCode}/date")
+    @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
-                                                                                       @RequestParam(required = false) Optional<String> dateStart,
-                                                                                       @RequestParam(required = false) Optional<String> dateEnd) throws URISyntaxException {
+                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
+                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
         List formDataList = this.patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
         log.info("GETTING encounterList 123 in List by formDataList... " + formDataList);
         return formDataList;

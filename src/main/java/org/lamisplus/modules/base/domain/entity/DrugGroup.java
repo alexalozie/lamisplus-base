@@ -7,11 +7,11 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "drug_group", schema = "public", catalog = "lamisplus")
 public class DrugGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +22,9 @@ public class DrugGroup {
     private String name;
 
     @Basic
-    @Column(name = "code")
-    private String code;
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
 
     @Basic
     @Column(name = "date_created")
@@ -52,6 +53,6 @@ public class DrugGroup {
 
     @OneToMany(mappedBy = "drugGroupByDrugGroupId")
     @JsonIgnore
-    private Collection<Drug> drugsById;
+    private List<Drug> drugsById;
 
 }

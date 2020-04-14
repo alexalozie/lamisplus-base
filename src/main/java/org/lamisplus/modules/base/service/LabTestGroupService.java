@@ -49,7 +49,9 @@ public class LabTestGroupService {
     }
 
     public List<LabTest> getLabTestsByLabTestGroupId(Long id){
-        List<LabTest> labTests = this.labTestRepository.findAllByLabTestGroupId(id);
+        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
+        if (!labTestGroupOptional.isPresent()) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
+        List<LabTest> labTests = labTestGroupOptional.get().getLabTestsById();
         return labTests;
     }
 

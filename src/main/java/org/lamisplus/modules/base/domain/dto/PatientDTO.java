@@ -17,9 +17,6 @@ public class PatientDTO {
     private Long patientId;
     private Long personId;
     private Long visitId;
-/*    @JsonIgnore
-    private Long personContactId;*/
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateRegistration;
 

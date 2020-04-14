@@ -1,15 +1,16 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "person", schema = "public", catalog = "lamisplus")
 public class Person {
 
     @Id
@@ -39,23 +40,51 @@ public class Person {
 
     @Basic
     @Column(name = "education_id")
-    private Long educationId = 1L;
+    private Long educationId;
 
     @Basic
     @Column(name = "gender_id")
-    private Long genderId = 1L;
+    private Long genderId;
 
     @Basic
     @Column(name = "occupation_id")
-    private Long occupationId = 1L;
+    private Long occupationId;
 
     @Basic
     @Column(name = "marital_status_id")
-    private Long maritalStatusId = 1L;
+    private Long maritalStatusId;
 
     @Basic
     @Column(name = "person_title_id")
-    private Long personTitleId = 1L;
+    private Long personTitleId;
+
+    @Basic
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    private Integer archived;
 
 
 

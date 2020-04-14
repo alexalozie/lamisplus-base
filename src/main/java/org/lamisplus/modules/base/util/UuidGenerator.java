@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.util.converter;
+package org.lamisplus.modules.base.util;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -36,10 +36,11 @@ public class Program implements Serializable {
     private Collection<Encounter> programByProgramCode;
 */
 
-   /* @OneToMany(mappedBy = "formByProgramCode")
-    private Collection<Form> formByProgramCode;
+   @OneToMany(mappedBy = "formByProgramCode")
+   @JsonIgnore
+   private Collection<Form> formByProgramCode;
 
-*/
+
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore

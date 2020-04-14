@@ -54,6 +54,6 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
 
 
-
+    List<Encounter> findAllByFormCode(String formCode);
 }
 

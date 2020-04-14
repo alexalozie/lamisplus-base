@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -54,6 +55,34 @@ public class Visit {
     @Basic
     @Column(name = "visit_type_id", nullable = false)
     private Long visitTypeId;
+
+    @Basic
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    private Integer archived;
 
     @JoinColumn(name = "patient_id", insertable = false, updatable = false)
     @ManyToOne

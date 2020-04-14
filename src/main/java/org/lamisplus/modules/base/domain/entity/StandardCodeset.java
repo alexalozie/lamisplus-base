@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "standard_codeset", schema = "public", catalog = "lamisplus")
 public class StandardCodeset {
     private Long id;
     private String code;

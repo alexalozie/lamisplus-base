@@ -8,9 +8,9 @@ public class LabTestDTO {
 
     private Long id;
 
-    private Long labTestCategoryId;
+    private Long labTestGroupId;
 
-    private String description;
+    private String name;
 
     private String unitMeasurement;
 

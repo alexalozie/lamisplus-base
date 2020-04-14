@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Data
@@ -32,8 +33,33 @@ public class Patient {
     private Long personId;
 
     @Basic
-    @Column(name = "hospital_number")
+    @Column(name = "patient_number")
     private String hospitalNumber;
+
+    @Basic
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")
@@ -53,15 +79,7 @@ public class Patient {
 
     /*
     @OneToMany(mappedBy = "patientByPatientId")
-    public Collection<Encounter> getEncountersById() {
-        return encountersById;
-    }
+    public List<Encounter> encountersById;
 
-    public void setEncountersById(Collection<Encounter> encountersById) {
-        this.encountersById = encountersById;
-    }
     */
-    /*
-
-     */
 }

@@ -10,6 +10,7 @@ import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -50,12 +51,44 @@ public class Encounter implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime timeCreated;
 
+    @Basic
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
+
+    /*@Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;*/
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    @JsonIgnore
+    private Integer archived;
+
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     private Patient patientByPatientId;
 
     @ManyToOne
     @JoinColumn(name = "visit_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     private Visit visitByVisitId;
 
     @ManyToOne
@@ -67,7 +100,6 @@ public class Encounter implements Serializable {
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
     private Program programByProgramCode;
-
 
     @OneToMany(mappedBy = "encounterByEncounterId")
     @JsonIgnore

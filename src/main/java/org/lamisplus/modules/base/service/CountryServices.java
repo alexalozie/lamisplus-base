@@ -46,7 +46,8 @@ public class CountryServices {
     }
 
     public List<State> getStatesByCountryId(Long id){
-        List<State> stateList = this.stateRepository.findAllByCountryId(id);
+        Country country = countryRepository.getOne(id);
+        List<State> stateList = country.getCountryByCountryId();
         return stateList;
     }
 

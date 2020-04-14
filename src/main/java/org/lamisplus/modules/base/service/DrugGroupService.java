@@ -48,7 +48,10 @@ public class DrugGroupService {
     }
 
     public List<Drug> getDrugByDrugGroupId(Long id){
-        List<Drug> drugs = this.drugRepository.findAllByDrugGroupId(id);
+        Optional<DrugGroup> drugOptional = drugGroupRepository.findById(id);
+        if(!drugOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
+        log.info("Drug group is"+drugOptional.get());
+        List<Drug> drugs = drugOptional.get().getDrugsById();
         return drugs;
     }
 

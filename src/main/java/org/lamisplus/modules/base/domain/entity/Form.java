@@ -9,12 +9,12 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collection;
 
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-//@Table(name = "form", schema = "public", catalog = "lamisplus")
 @EqualsAndHashCode
 public class Form extends JsonBEntity implements Serializable {
 
@@ -43,17 +43,46 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "version")
-    private Double version;
+    private String version;
+
+    @Basic
+    @Column(name = "usage_status")
+    private Integer usageCode;
 
     @Basic
     @Column(name = "name")
     private String name;
 
-/*
+
     @OneToMany(mappedBy = "encounterByFormCode")
     @JsonIgnore
     private Collection<Encounter> formByCode;
-*/
+
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
+    @Column(name = "archived")
+    @JsonIgnore
+    private Integer archived;
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)

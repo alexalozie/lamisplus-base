@@ -44,8 +44,9 @@ public class Organisation {
     private String pin;
 
     @Basic
-    @Column(name = "code")
-    private String code;
+    @Column(name = "uuid")
+    @JsonIgnore
+    private String uuid;
 
     @Basic
     @Column(name = "state_id")

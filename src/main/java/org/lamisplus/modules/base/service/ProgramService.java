@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.ServiceDTO;
+import org.lamisplus.modules.base.domain.dto.ProgramDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.entity.Program;
-import org.lamisplus.modules.base.domain.mapper.ServiceMapper;
+import org.lamisplus.modules.base.domain.mapper.ProgramMapper;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +22,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProgramService {
     private final ProgramRepository programRepository;
-    private final ServiceMapper serviceMapper;
+    private final ProgramMapper programMapper;
     private final ModuleRepository moduleRepository;
 
-    public Program save(ServiceDTO serviceDTO) {
-        Optional<Module> moduleOptional = this.moduleRepository.findById(serviceDTO.getModuleId());
-        if(!moduleOptional.isPresent()) throw new EntityNotFoundException(Module.class, "Module Id", serviceDTO.getModuleId() + "");
+    public Program save(ProgramDTO programDTO) {
+        Optional<Module> moduleOptional = this.moduleRepository.findById(programDTO.getModuleId());
+        if(!moduleOptional.isPresent()) throw new EntityNotFoundException(Module.class, "Module Id", programDTO.getModuleId() + "");
 
-        Optional<Program> serviceOptional = this.programRepository.findByCode(serviceDTO.getProgramCode());
-        if(serviceOptional.isPresent()) throw new RecordExistException(Program.class, "Program Name", serviceDTO.getProgramCode() +"");
+        Optional<Program> serviceOptional = this.programRepository.findByCode(programDTO.getProgramCode());
+        if(serviceOptional.isPresent()) throw new RecordExistException(Program.class, "Program Name", programDTO.getProgramCode() +"");
 
-        final Program program = this.serviceMapper.toServiceDTO(serviceDTO);
+        final Program program = this.programMapper.toProgramDTO(programDTO);
 
         return this.programRepository.save(program);
     }

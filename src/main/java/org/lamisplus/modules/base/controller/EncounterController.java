@@ -1,6 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Encounter;
@@ -41,10 +41,11 @@ public class EncounterController {
     //GETTING LATEST ENCOUNTER(DRUG ORDER, VITALS, LAB TEST, CONSULTATION all patients)
     @ApiOperation(value="getEncounterByFormCodeAndDateEncounter", notes = " formCode=required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
-    @GetMapping("/{formCode}/date")
+    @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDate(@PathVariable String formCode,
-                                                                 @RequestParam(required = false) Optional<String> dateStart,
-                                                                 @RequestParam(required = false) Optional<String> dateEnd) throws URISyntaxException {
+                                                                 @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
+                                                                            @ApiParam(value = "", required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
+        log.info("Date is "+ dateStart);
         List<EncounterDTO> encounterDTOS = this.encounterService.getEncounterByFormCodeAndDate(formCode, dateStart, dateEnd);
         return ResponseEntity.ok(encounterDTOS);
     }
@@ -52,6 +53,11 @@ public class EncounterController {
     @GetMapping("/{id}")
     public ResponseEntity<EncounterDTO> getEncounter(@PathVariable Long id) {
         return ResponseEntity.ok(this.encounterService.getEncounter(id));
+    }
+
+    @GetMapping("/{id}/form-data")
+    public ResponseEntity<List> getFormDataByEncounterId(@PathVariable Long id) {
+        return ResponseEntity.ok(this.encounterService.getFormDataByEncounterId(id));
     }
 
     @PutMapping("/{id}")

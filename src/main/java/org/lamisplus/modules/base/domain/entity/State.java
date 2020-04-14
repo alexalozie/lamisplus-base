@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +13,7 @@ public class State {
     private String name;
     private Long countryId;
     //private Collection<PersonContact> personContactsById;
-    //private Collection<Province> provincesById;
+    private List<Province> provincesById;
     private Country countryByCountryId;
     private Collection<Organisation> organizationsById;
 
@@ -95,6 +96,16 @@ public class State {
     public void setCountryByCountryId(Country countryByCountryId) {
         this.countryByCountryId = countryByCountryId;
     }
+
+    @OneToMany(mappedBy = "stateByStateId")
+    public List<Province> getProvincesById() {
+        return provincesById;
+    }
+
+    public void setProvincesById(List<Province> provincesById) {
+        this.provincesById = provincesById;
+    }
+
 
     /*@OneToMany(mappedBy = "stateByStateId")
     public Collection<Organisation> getOrganizationsById() {
